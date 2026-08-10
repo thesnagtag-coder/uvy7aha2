@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeLife — Limited Mobility & Wheelchair Household · PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════ THEME ENGINE ═══════════ */
+:root {
+  --navy:#0D1B2A; --navy-mid:#1A2F45;
+  --critical:#DC2626; --high:#EA580C; --medium:#D97706; --low:#16A34A;
+  --radius:12px;
+  --shadow:0 2px 12px rgba(13,27,42,0.08);
+  --shadow-lg:0 8px 32px rgba(13,27,42,0.14);
+}
+body[data-theme="chronic"] { --accent:#7A3B46; --accent-dark:#5F2E37; --accent-rgb:122,59,70; }
+body[data-theme="injury"] { --accent:#6E8CA0; --accent-dark:#56708D; --accent-rgb:110,140,160; }
+body[data-theme="teal"]   { --accent:#14B8A6; --accent-dark:#0D9488; --accent-rgb:20,184,166; }
+body[data-theme="amber"]  { --accent:#F59E0B; --accent-dark:#D97706; --accent-rgb:245,158,11; }
+body[data-theme="rose"]   { --accent:#E11D48; --accent-dark:#BE123C; --accent-rgb:225,29,72; }
+body[data-theme="violet"] { --accent:#7C3AED; --accent-dark:#6D28D9; --accent-rgb:124,58,237; }
+body[data-theme="ocean"]  { --accent:#2563EB; --accent-dark:#1D4ED8; --accent-rgb:37,99,235; }
+body[data-theme="forest"] { --accent:#16A34A; --accent-dark:#15803D; --accent-rgb:22,163,74; }
+body[data-theme="mobility"] { --accent:#3E6B8A; --accent-dark:#2F5268; --accent-rgb:62,107,138; }
+body[data-mode="light"] {
+  --bg:#F9F6F0; --surface:#FFFFFF; --surface-2:#EDE6D6; --tile:#F9F6F0;
+  --ink:#0D1B2A; --ink-mid:#3A4A5C; --ink-soft:#6B7A8D; --line:#EDE6D6;
+  --critical-bg:#FEF2F2; --high-bg:#FFF7ED; --medium-bg:#FFFBEB; --low-bg:#F0FDF4;
+}
+body[data-mode="dark"] {
+  --bg:#0B1420; --surface:#13202F; --surface-2:#1C2C3E; --tile:#0F1A28;
+  --ink:#EDF2F7; --ink-mid:#B7C4D1; --ink-soft:#8194A7; --line:#243549;
+  --critical-bg:rgba(220,38,38,.16); --high-bg:rgba(234,88,12,.16);
+  --medium-bg:rgba(217,119,6,.16); --low-bg:rgba(22,163,74,.16);
+  --shadow:0 2px 12px rgba(0,0,0,0.35); --shadow-lg:0 8px 32px rgba(0,0,0,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+/* ═══════════ TOP BAR ═══════════ */
+.topbar{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 20px;min-height:58px;position:relative;z-index:300;border-bottom:2px solid var(--accent);flex-wrap:wrap;}
+.topbar-brand{display:flex;align-items:center;gap:12px;}
+.topbar-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;font-family:'Sora',sans-serif;color:#fff;box-shadow:0 2px 8px rgba(var(--accent-rgb),.4);}
+.topbar-name{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;}
+.topbar-name span{color:var(--accent);}
+.topbar-tagline{font-size:11px;color:rgba(255,255,255,.5);font-style:italic;}
+.topbar-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.progress-pill{background:rgba(var(--accent-rgb),.15);border:1px solid rgba(var(--accent-rgb),.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.progress-pill span{color:#fff;font-size:13px;}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;}
+.tool-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .2s;position:relative;}
+.tool-btn:hover{background:rgba(var(--accent-rgb),.3);border-color:var(--accent);}
+.tool-btn .tb-label{font-size:11px;}
+@media(max-width:820px){.tool-btn .tb-label{display:none;}.topbar-tagline{display:none;}}
+
+/* ═══════════ DROPDOWN PANELS ═══════════ */
+.dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:10px;display:none;z-index:400;min-width:190px;}
+.dropdown.open{display:block;}
+.dropdown-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);padding:4px 8px 8px;}
+.theme-row{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:none;background:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--ink);text-align:left;}
+.theme-row:hover{background:rgba(var(--accent-rgb),.08);}
+.theme-row.selected{background:rgba(var(--accent-rgb),.12);}
+.theme-swatch{width:18px;height:18px;border-radius:6px;flex-shrink:0;}
+.theme-row .check-mark{margin-left:auto;color:var(--accent);font-weight:800;}
+
+/* ═══════════ HERO ═══════════ */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 60%,#3a2703 100%);padding:48px 32px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(var(--accent-rgb),.14) 0%,transparent 60%);}
+.hero-emoji{font-size:64px;line-height:1;margin-bottom:12px;display:block;position:relative;}
+.hero-title{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:6px;position:relative;}
+.hero-subtitle{font-size:15px;color:rgba(255,255,255,.65);margin-bottom:20px;position:relative;}
+.hero-badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;}
+.hero-badge{background:rgba(var(--accent-rgb),.15);border:1px solid rgba(var(--accent-rgb),.35);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;cursor:pointer;transition:background .2s,transform .15s;user-select:none;}
+.hero-badge:hover{background:rgba(var(--accent-rgb),.28);transform:translateY(-1px);}
+
+/* ═══════════ PROGRESS ═══════════ */
+.progress-section{background:var(--surface);border-bottom:1px solid var(--line);padding:0 32px;height:46px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:290;box-shadow:0 2px 8px rgba(13,27,42,.06);}
+.progress-label{font-size:12px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+.progress-track{flex:1;height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-dark));border-radius:4px;width:0%;transition:width .4s ease;}
+.progress-count{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;}
+.celebrate{display:none;background:linear-gradient(135deg,rgba(var(--accent-rgb),.15),rgba(var(--accent-rgb),.05));border-bottom:1px solid rgba(var(--accent-rgb),.3);padding:14px 32px;text-align:center;font-weight:700;color:var(--accent-dark);font-size:15px;font-family:'Sora',sans-serif;}
+.celebrate.show{display:block;}
+
+/* ═══════════ SEARCH ═══════════ */
+.search-wrap{padding:20px 20px 0;max-width:860px;margin:0 auto;}
+.search-box{width:100%;padding:10px 16px 10px 40px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px;font-family:'Inter',sans-serif;color:var(--ink);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7A8D' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;transition:border-color .2s;}
+.search-box:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1);}
+.search-no-results{text-align:center;padding:40px;color:var(--ink-soft);font-size:14px;display:none;}
+
+/* ═══════════ ZONE TABS ═══════════ */
+.zone-tabs{background:var(--surface);border-bottom:2px solid var(--line);display:flex;overflow-x:auto;padding:0 24px;gap:4px;scrollbar-width:none;position:sticky;top:46px;z-index:200;}
+.zone-tabs::-webkit-scrollbar{display:none;}
+.zone-tab{display:flex;align-items:center;gap:7px;padding:14px 18px;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;margin-bottom:-2px;}
+.zone-tab:hover{color:var(--accent);background:rgba(var(--accent-rgb),.05);}
+.zone-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.zone-tab-count{background:var(--surface-2);border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;color:var(--ink-soft);}
+.zone-tab.active .zone-tab-count{background:rgba(var(--accent-rgb),.15);color:var(--accent);}
+
+/* ═══════════ MAIN / STATS ═══════════ */
+.main{max-width:860px;margin:0 auto;padding:28px 20px 60px;}
+.stats-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;user-select:none;}
+.stat-pill:hover{border-color:var(--accent);}
+.stat-pill.filter-on{border-color:var(--accent);background:rgba(var(--accent-rgb),.08);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.15);}
+.stat-dot{width:8px;height:8px;border-radius:50%;}
+.stat-dot.critical{background:var(--critical);}.stat-dot.high{background:var(--high);}.stat-dot.medium{background:var(--medium);}.stat-dot.low{background:var(--low);}
+.stat-count{font-size:15px;font-weight:700;}
+.risk-legend{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ink-soft);}
+.legend-dot{width:8px;height:8px;border-radius:3px;}
+
+/* ═══════════ ZONE PANEL ═══════════ */
+.zone-panel{display:none;}
+.zone-panel.active{display:block;}
+.zone-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding:20px 24px;background:var(--surface);border-radius:var(--radius);border:1px solid rgba(var(--accent-rgb),.2);box-shadow:var(--shadow);}
+.zone-icon{width:52px;height:52px;background:linear-gradient(135deg,rgba(var(--accent-rgb),.12),rgba(var(--accent-rgb),.06));border:2px solid rgba(var(--accent-rgb),.25);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.zone-header-text h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.zone-header-text p{font-size:13px;color:var(--ink-soft);}
+
+/* ═══════════ CHECK CARDS ═══════════ */
+.checks-list{display:flex;flex-direction:column;gap:10px;}
+.check-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s;}
+.check-card:hover{box-shadow:var(--shadow-lg);}
+.check-card.completed{border-color:rgba(var(--accent-rgb),.3);background:rgba(var(--accent-rgb),.03);}
+.check-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;}
+.check-checkbox{width:22px;height:22px;min-width:22px;border:2px solid var(--surface-2);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:13px;background:var(--surface);}
+.check-card.completed .check-checkbox{background:var(--accent);border-color:var(--accent);color:#fff;}
+.check-num{font-size:10px;font-weight:700;color:var(--ink-soft);min-width:30px;font-family:'Sora',sans-serif;}
+.check-risk{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.risk-critical{background:var(--critical-bg);color:var(--critical);}
+.risk-high{background:var(--high-bg);color:var(--high);}
+.risk-medium{background:var(--medium-bg);color:var(--medium);}
+.risk-low{background:var(--low-bg);color:var(--low);}
+.check-title{flex:1;font-size:14px;font-weight:600;color:var(--ink);line-height:1.4;}
+.check-card.completed .check-title{color:var(--ink-soft);text-decoration:line-through;}
+.check-chevron{font-size:12px;color:var(--ink-soft);transition:transform .25s;min-width:16px;}
+.check-card.open .check-chevron{transform:rotate(180deg);}
+.check-detail{display:none;padding:0 18px 18px 18px;border-top:1px solid var(--line);}
+.check-card.open .check-detail{display:block;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+@media(max-width:600px){.detail-grid{grid-template-columns:1fr;}}
+.detail-item{background:var(--tile);border-radius:8px;padding:11px 13px;}
+.detail-item.full{grid-column:1/-1;}
+.detail-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--accent-dark);margin-bottom:4px;display:flex;align-items:center;gap:5px;}
+body[data-mode="dark"] .detail-label{color:var(--accent);}
+.detail-value{font-size:13px;color:var(--ink);line-height:1.55;}
+.tip-box{margin-top:12px;background:linear-gradient(135deg,rgba(var(--accent-rgb),.08),rgba(var(--accent-rgb),.04));border:1px solid rgba(var(--accent-rgb),.25);border-left:4px solid var(--accent);border-radius:8px;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;}
+.tip-icon{font-size:16px;line-height:1;margin-top:1px;}
+.tip-text{font-size:13px;color:var(--ink);line-height:1.55;}
+.tip-text strong{color:var(--accent-dark);font-weight:700;}
+body[data-mode="dark"] .tip-text strong{color:var(--accent);}
+.measurement-box{margin-top:10px;background:rgba(var(--accent-rgb),.05);border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:12px;color:var(--ink-mid);line-height:1.5;font-family:'Sora',sans-serif;}
+.measurement-box strong{color:var(--ink);font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px;}
+
+/* ═══════════ ZONE ACTIONS ═══════════ */
+.zone-actions{display:flex;justify-content:flex-end;gap:10px;margin:14px 0 18px;flex-wrap:wrap;}
+.btn{padding:9px 18px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+.btn-outline{background:var(--surface);border:1px solid var(--line);color:var(--ink-mid);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;box-shadow:0 2px 8px rgba(var(--accent-rgb),.3);}
+.btn-primary:hover{box-shadow:0 4px 16px rgba(var(--accent-rgb),.4);transform:translateY(-1px);}
+
+/* ═══════════ MODALS ═══════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(13,27,42,.6);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:16px;max-width:640px;width:100%;box-shadow:var(--shadow-lg);border-top:4px solid var(--accent);}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);}
+.modal-head h3{font-family:'Sora',sans-serif;font-size:18px;color:var(--ink);display:flex;align-items:center;gap:8px;}
+.modal-close{background:none;border:none;font-size:22px;color:var(--ink-soft);cursor:pointer;line-height:1;padding:4px;}
+.modal-close:hover{color:var(--accent);}
+.modal-body{padding:20px 24px 26px;color:var(--ink-mid);font-size:13.5px;}
+.modal-body h4{font-family:'Sora',sans-serif;font-size:14px;color:var(--ink);margin:16px 0 6px;display:flex;align-items:center;gap:6px;}
+.modal-body h4:first-child{margin-top:0;}
+.modal-body p{margin-bottom:8px;}
+.modal-body table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0;}
+.modal-body th{text-align:left;padding:7px 10px;background:rgba(var(--accent-rgb),.1);color:var(--ink);font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.modal-body td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--ink-mid);}
+.modal-body td strong{color:var(--ink);}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:0 24px 22px;flex-wrap:wrap;}
+.rule-list{list-style:none;margin:6px 0;}
+.rule-list li{padding:6px 0 6px 26px;position:relative;border-bottom:1px dashed var(--line);}
+.rule-list li::before{content:'✓';position:absolute;left:2px;color:var(--accent);font-weight:800;}
+
+/* ═══════════ COLLECTION / UPSELL ═══════════ */
+.collection{max-width:860px;margin:0 auto;padding:10px 20px 50px;}
+.collection h3{font-family:'Sora',sans-serif;font-size:18px;color:var(--ink);margin-bottom:4px;}
+.collection>p{font-size:13px;color:var(--ink-soft);margin-bottom:16px;}
+.collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.module-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px;transition:all .2s;}
+.module-card:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.module-card .m-emoji{font-size:26px;}
+.module-card .m-name{font-family:'Sora',sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);}
+.module-card .m-age{font-size:11.5px;color:var(--ink-soft);}
+.module-tag{margin-top:6px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-radius:6px;padding:3px 8px;align-self:flex-start;}
+.module-tag.owned{background:rgba(var(--accent-rgb),.15);color:var(--accent-dark);}
+body[data-mode="dark"] .module-tag.owned{color:var(--accent);}
+.module-tag.addon{background:var(--surface-2);color:var(--ink-soft);}
+.module-tag.coming{background:transparent;color:var(--ink-soft);border:1px dashed var(--line);}
+
+/* ═══════════ FOOTER ═══════════ */
+.footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:24px;font-size:12px;line-height:1.8;}
+.footer strong{color:rgba(255,255,255,.8);}
+
+/* ═══════════ TRADEMARK ICON SET ═══════════ */
+.zic svg{width:16px;height:16px;vertical-align:-3px;}
+.zone-tab .zic svg{color:inherit;}
+.topbar-logo svg{width:22px;height:22px;color:#fff;}
+.hero-emoji svg{width:72px;height:72px;color:var(--accent);filter:drop-shadow(0 4px 14px rgba(var(--accent-rgb),.45));}
+.zone-icon svg{width:27px;height:27px;color:var(--accent-dark);}
+body[data-mode="dark"] .zone-icon svg{color:var(--accent);}
+.module-card .m-emoji svg{width:30px;height:30px;color:var(--accent-dark);}
+body[data-mode="dark"] .module-card .m-emoji svg{color:var(--accent);}
+
+/* ═══════════ FLOATING NAV / DISCLAIMERS ═══════════ */
+html{scroll-behavior:smooth;}
+.float-nav{position:fixed;right:16px;bottom:20px;display:flex;flex-direction:column;gap:8px;z-index:250;}
+html[dir="rtl"] .float-nav{right:auto;left:16px;}
+.float-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent-dark);font-size:18px;font-weight:800;cursor:pointer;box-shadow:var(--shadow-lg);transition:all .2s;}
+.float-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-2px);}
+body[data-mode="dark"] .float-btn{color:var(--accent);}
+.zone-disclaimer{margin-top:18px;padding:10px 14px;border:1px dashed var(--line);border-radius:8px;font-size:11.5px;color:var(--ink-soft);text-align:center;}
+.print-disclaimer{display:none;}
+
+/* ═══════════ PRINT ═══════════ */
+#cheat-print{display:none;}
+@media print{
+  body{background:#fff !important;color:#000;font-size:11px;margin:0 !important;padding:0 !important;}
+  .topbar,.hero,.search-wrap,.zone-tabs,.progress-section,.zone-actions,.stats-bar,.collection,.modal-overlay,.celebrate,.dropdown{display:none !important;}
+  .main{max-width:100%;padding:0 0 30px;}
+  .check-card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:6px;}
+  .check-detail{display:block !important;border-top:1px solid #ddd;}
+  .check-chevron{display:none;}
+  .zone-panel{display:block !important;page-break-before:auto;}
+  .zone-header{box-shadow:none;border:1px solid #ccc;margin-top:14px;}
+  body.print-zone .zone-panel{display:none !important;}
+  body.print-zone .zone-panel.active{display:block !important;}
+  body.print-cheat .main,body.print-cheat .footer,body.print-cheat .zone-panel,body.print-cheat .print-disclaimer{display:none !important;}
+  body.print-cheat #cheat-print{display:block !important;}
+  #cheat-print{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cp-card{border:2.5px solid #0D1B2A;border-radius:16px;overflow:hidden;font-family:'Inter',sans-serif;color:#0D1B2A;height:272mm;display:flex;flex-direction:column;page-break-inside:avoid;page-break-after:avoid;}
+  .cp-head{background:#0D1B2A !important;color:#fff;display:flex;align-items:center;gap:12px;padding:13px 22px;}
+  .cp-head svg{width:38px;height:38px;color:var(--accent);}
+  .cp-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;line-height:1.2;}
+  .cp-title em{color:var(--accent);font-style:normal;}
+  .cp-sub{font-size:11.5px;color:rgba(255,255,255,.78);margin-top:2px;}
+  .cp-tag{margin-left:auto;font-size:10px;font-style:italic;color:rgba(255,255,255,.65);text-align:right;}
+  .cp-contacts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:11px 22px;background:rgba(var(--accent-rgb),.09) !important;}
+  .cp-chip{border:1.2px solid rgba(var(--accent-rgb),.55);border-radius:8px;padding:5px 9px;background:#fff !important;}
+  .cp-chip b{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.3px;color:var(--accent-dark);}
+  .cp-chip span{font-size:12px;font-weight:700;}
+  .cp-cols{display:flex;gap:20px;padding:13px 22px 6px;flex:1;min-height:0;overflow:hidden;}
+  .cp-cols h3{font-family:'Sora',sans-serif;font-size:13px;border-bottom:2px solid var(--accent);padding-bottom:3px;margin:0 0 8px;}
+  .cp-rules{flex:1.15;}
+  .cp-rules ul{list-style:none;margin:0;padding:0;}
+  .cp-rules li{font-size:11px;line-height:1.5;padding:4px 0 4px 18px;position:relative;border-bottom:1px dashed #ddd;}
+  .cp-rules li::before{content:'✓';position:absolute;left:0;color:var(--accent-dark);font-weight:800;}
+  html[dir="rtl"] .cp-rules li{padding:4px 18px 4px 0;}
+  html[dir="rtl"] .cp-rules li::before{left:auto;right:0;}
+  .cp-numsec{flex:1;}
+  .cp-numsec table{width:100%;border-collapse:collapse;font-size:10.5px;}
+  .cp-numsec td{border-bottom:1px solid #eee;padding:4px 5px;vertical-align:top;}
+  .cp-numsec td strong{color:#0D1B2A;}
+  .cp-notes{margin:6px 22px 10px;border:1.5px dashed var(--accent);border-radius:10px;padding:8px 13px;font-size:11px;white-space:pre-wrap;max-height:34mm;overflow:hidden;}
+  .cp-notes b{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent-dark);display:block;margin-bottom:2px;}
+  .cp-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#0D1B2A !important;color:rgba(255,255,255,.85);padding:9px 22px;font-size:10px;line-height:1.55;margin-top:auto;}
+  .cp-foot b{color:var(--accent);}
+  .cp-qr{display:flex;align-items:center;gap:10px;text-align:right;}
+  .cp-qr img{width:68px;height:68px;background:#fff;border-radius:8px;padding:3px;}
+  .cp-qr .qr-ph{width:68px;height:68px;border:1.5px dashed rgba(255,255,255,.5);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:8.5px;text-align:center;color:rgba(255,255,255,.6);padding:4px;}
+  .footer{background:#fff;color:#555;}
+  .footer strong{color:#000;}
+  .float-nav{display:none !important;}
+  .print-disclaimer{display:block !important;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:8.5px;color:#666;border-top:1px solid #ccc;padding:3px 0;background:#fff;}
+  @page{size:A4;margin:10mm 10mm 12mm;}
+}
+</style>
+</head>
+<body data-theme="mobility" data-mode="light">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo" id="logo-icon">S</div>
+    <div>
+      <div class="topbar-name">Safe<span>Life</span></div>
+      <div class="topbar-tagline">To all moms by a mom · NEBOSH &amp; OSHA Professional</div>
+    </div>
+  </div>
+  <div class="topbar-meta">
+    <div class="toolbar">
+      <button class="tool-btn" id="btn-search" title="Search all checks">🔍</button>
+      <button class="tool-btn" id="btn-manual" title="User Manual">📖<span class="tb-label" data-i18n="manual">Manual</span></button>
+      <button class="tool-btn" id="btn-cheat" title="Emergency Cheat Sheet">🚨<span class="tb-label" data-i18n="cheat">Cheat Sheet</span></button>
+      <button class="tool-btn" id="btn-print" title="Print / Save as PDF">🖨️<span class="tb-label" data-i18n="printPdf">Print / PDF</span></button>
+      <button class="tool-btn" id="btn-save" title="Save progress to file">💾<span class="tb-label" data-i18n="save">Save</span></button>
+      <button class="tool-btn" id="btn-load" title="Load saved progress">📂<span class="tb-label" data-i18n="load">Load</span></button>
+      <button class="tool-btn" id="btn-lang" title="Language" style="display:none">🌐<span class="tb-label" id="lang-label">EN</span>
+        <div class="dropdown" id="dd-lang"></div>
+      </button>
+      <button class="tool-btn" id="btn-theme" title="Colour theme">🎨<span class="tb-label" data-i18n="theme">Theme</span>
+        <div class="dropdown" id="dd-theme"></div>
+      </button>
+      <button class="tool-btn" id="btn-mode" title="Light / dark mode">🌙</button>
+    </div>
+    <div class="progress-pill"><span id="topbar-done">0</span>&nbsp;/ 84 <span data-i18n="checksDone" style="color:inherit;font-size:12px;">checks done</span></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-emoji" id="hero-icon">♿</span>
+  <div class="hero-title" data-i18n="heroTitle">Limited Mobility &amp; Wheelchair Household</div>
+  <div class="hero-subtitle" data-i18n="heroSub">84 practical safety checks across 6 zones · Supporting safe, dignified, independent daily living for wheelchair users and household members with limited mobility</div>
+  <div class="hero-badges">
+    <div class="hero-badge" data-zone="1"><span class="zic" data-zi="z1"></span> <span data-i18n="bz1">Wheelchair Fit &amp; Transfers</span></div>
+    <div class="hero-badge" data-zone="2"><span class="zic" data-zi="z2"></span> <span data-i18n="bz2">Ramps &amp; Pathways</span></div>
+    <div class="hero-badge" data-zone="3"><span class="zic" data-zi="z3"></span> <span data-i18n="bz3">Reach Zones &amp; Bathroom</span></div>
+    <div class="hero-badge" data-zone="4"><span class="zic" data-zi="z4"></span> <span data-i18n="bz4">Fire Escape Planning</span></div>
+    <div class="hero-badge" data-zone="5"><span class="zic" data-zi="z5"></span> <span data-i18n="bz5">Home Modifications</span></div>
+    <div class="hero-badge" data-zone="6"><span class="zic" data-zi="z6"></span> <span data-i18n="bz6">Community &amp; Support</span></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <div class="progress-label" data-i18n="overallProgress">Overall Progress</div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-count" id="progress-count">0 of 84</div>
+</div>
+<div class="celebrate" id="celebrate">🎉 <span data-i18n="celebrate">All 84 checks complete — your household is set up for safe, confident, independent living. Print your checklist as a keepsake.</span></div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input class="search-box" type="text" id="search-input" placeholder="Search checks… e.g. ramp gradient, transfer technique, grab bars, evacuation plan, reach height, turning circle…">
+</div>
+
+<!-- ZONE TABS -->
+<div class="zone-tabs" id="zone-tabs">
+  <button class="zone-tab active" data-zone="1"><span class="zic" data-zi="z1"></span> <span data-i18n="z1">Wheelchair Fit, Maintenance &amp; Safe Transfers</span> <span class="zone-tab-count" id="ztc-1">0/14</span></button>
+  <button class="zone-tab" data-zone="2"><span class="zic" data-zi="z2"></span> <span data-i18n="z2">Ramps, Doorways &amp; Accessible Pathways</span> <span class="zone-tab-count" id="ztc-2">0/14</span></button>
+  <button class="zone-tab" data-zone="3"><span class="zic" data-zi="z3"></span> <span data-i18n="z3">Reach Zones &amp; Kitchen/Bathroom Accessibility</span> <span class="zone-tab-count" id="ztc-3">0/14</span></button>
+  <button class="zone-tab" data-zone="4"><span class="zic" data-zi="z4"></span> <span data-i18n="z4">Fire Escape &amp; Emergency Evacuation Planning</span> <span class="zone-tab-count" id="ztc-4">0/14</span></button>
+  <button class="zone-tab" data-zone="5"><span class="zic" data-zi="z5"></span> <span data-i18n="z5">Home Modifications &amp; Assistive Technology</span> <span class="zone-tab-count" id="ztc-5">0/14</span></button>
+  <button class="zone-tab" data-zone="6"><span class="zic" data-zi="z6"></span> <span data-i18n="z6">Community, Independence &amp; Caregiver Support</span> <span class="zone-tab-count" id="ztc-6">0/14</span></button>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main-content">
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill" data-risk="critical"><span class="stat-dot critical"></span><span class="stat-count" id="s-critical">0</span> <span data-i18n="critical">Critical</span></div>
+    <div class="stat-pill" data-risk="high"><span class="stat-dot high"></span><span class="stat-count" id="s-high">0</span> <span data-i18n="high">High</span></div>
+    <div class="stat-pill" data-risk="medium"><span class="stat-dot medium"></span><span class="stat-count" id="s-medium">0</span> <span data-i18n="medium">Medium</span></div>
+    <div class="stat-pill" data-risk="low"><span class="stat-dot low"></span><span class="stat-count" id="s-low">0</span> <span data-i18n="low">Low</span></div>
+    <div class="risk-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--critical)"></div><span data-i18n="legendCritical">Critical = immediate action</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--high)"></div><span data-i18n="legendHigh">High = urgent attention</span></div>
+    </div>
+  </div>
+  <div id="search-no-results" class="search-no-results"><span data-i18n="noResults">No checks match your search. Try different keywords.</span><br><span data-i18n="notCovered" style="font-size:12.5px;"></span></div>
+</div>
+
+<!-- COLLECTION -->
+<div class="collection">
+  <h3 data-i18n="collTitle">The SafeLife Collection</h3>
+  <p data-i18n="collSub">One safety system for every stage of life. Add more modules any time — each works exactly like this one.</p>
+  <div class="collection-grid" id="collection-grid"></div>
+</div>
+
+<!-- SITUATION MODULES -->
+<div class="collection" style="padding-top:0;">
+  <h3>Situation Modules</h3>
+  <p>Real-life situations and conditions — each its own complete, standalone 84-check system. Available separately as they launch.</p>
+  <div class="collection-grid" id="situation-grid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <strong>SafeLife</strong> · Limited Mobility &amp; Wheelchair Household Module · PRO Edition<br>
+  Created by a NEBOSH &amp; OSHA trained HSE professional · "To all moms by a mom"<br>
+  Evidence base: WHO guidance on rehabilitation and assistive technology · ISO 21542 accessibility of the built environment (general principles) · recognised occupational-therapy and accessible-design guidance<br>
+  <span style="color:rgba(255,255,255,.35);" data-i18n="disclaimer">This checklist is educational general safety guidance. For major home modifications or equipment decisions, consult an occupational therapist or qualified accessibility professional for advice specific to your needs.</span>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-manual">
+  <div class="modal">
+    <div class="modal-head"><h3>📖 <span data-i18n="manualTitle">User Manual</span></h3><button class="modal-close" data-close="modal-manual">✕</button></div>
+    <div class="modal-body" id="manual-body"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cheat">
+  <div class="modal">
+    <div class="modal-head"><h3>🚨 <span data-i18n="cheatTitle">Emergency Cheat Sheet</span></h3><button class="modal-close" data-close="modal-cheat">✕</button></div>
+    <div class="modal-body" id="cheat-body"></div>
+    <div class="modal-actions"><button class="btn btn-outline" id="btn-seller" title="Seller: set this product's QR code" style="margin-right:auto;">⚙</button><button class="btn btn-primary" id="btn-print-cheat" data-i18n="printCheat">🖨️ Print cheat sheet</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-seller">
+  <div class="modal">
+    <div class="modal-head"><h3>⚙ Seller Settings</h3><button class="modal-close" data-close="modal-seller">✕</button></div>
+    <div class="modal-body" id="seller-body"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-print">
+  <div class="modal">
+    <div class="modal-head"><h3>🖨️ <span data-i18n="printTitle">Print or Save as PDF</span></h3><button class="modal-close" data-close="modal-print">✕</button></div>
+    <div class="modal-body">
+      <p data-i18n="printHint">Choose what to print. To save as a PDF instead of printing on paper, choose "Save as PDF" as the printer in the print dialog.</p>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:6px;" data-i18n="printNote">All checks are automatically expanded to full detail when printing — no need to open them first.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="print-zone" data-i18n="printZone">Current zone only</button>
+      <button class="btn btn-outline" id="print-cheat2" data-i18n="printCheat2">Cheat sheet</button>
+      <button class="btn btn-primary" id="print-all" data-i18n="printAll">Full checklist (all 84)</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="load-file" accept=".json" style="display:none">
+
+<!-- FLOATING CHECK NAVIGATION -->
+<div class="float-nav">
+  <button class="float-btn" id="fn-top" title="Back to top">⤒</button>
+  <button class="float-btn" id="fn-prev" title="Previous check">↑</button>
+  <button class="float-btn" id="fn-next" title="Next check">↓</button>
+</div>
+
+<!-- PRINT PAGE DISCLAIMER (repeats on every printed page) -->
+<div class="print-disclaimer" data-i18n="disclaimer">This checklist is educational general safety guidance. For major home modifications or equipment decisions, consult an occupational therapist or qualified accessibility professional for advice specific to your needs.</div>
+
+<div id="cheat-print"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// SELLER BRANDING — edit these three lines to make it yours
+// ═══════════════════════════════════════════
+const BRAND_NAME = 'The Snag Tag';
+const STORE_URL  = '';   // e.g. 'thesnagtag.gumroad.com' — printed under the QR code on the cheat sheet
+const QR_IMAGE   = '';   // paste your QR code as a data URL: 'data:image/png;base64,...'
+
+// ═══════════════════════════════════════════
+// I18N — full interface language packs (check content in English, verified guidance)
+// ═══════════════════════════════════════════
+const I18N = {
+en:{name:'English',manual:'Manual',cheat:'Cheat Sheet',printPdf:'Print / PDF',save:'Save',load:'Load',theme:'Theme',checksDone:'checks done',heroTitle:'Limited Mobility &amp; Wheelchair Household',heroSub:'84 practical safety checks across 6 zones · Supporting safe, dignified, independent daily living for wheelchair users and household members with limited mobility',bz1:'Wheelchair Fit &amp; Transfers',bz2:'Ramps &amp; Pathways',bz3:'Reach Zones &amp; Bathroom',bz4:'Fire Escape Planning',bz5:'Home Modifications',bz6:'Community &amp; Support',overallProgress:'Overall Progress',ofWord:'of',z1:'Wheelchair Fit, Maintenance &amp; Safe Transfers',z2:'Ramps, Doorways &amp; Accessible Pathways',z3:'Reach Zones &amp; Kitchen/Bathroom Accessibility',z4:'Fire Escape &amp; Emergency Evacuation Planning',z5:'Home Modifications &amp; Assistive Technology',z6:'Community, Independence &amp; Caregiver Support',zd1:'14 checks: correct wheelchair fit and sizing, tyre pressure and brake checks, safe transfer technique for bed, chair, car and toilet, transfer boards and slings, avoiding shoulder strain, and battery and cushion care.',zd2:'14 checks: safe ramp gradient and width, doorway and threshold clearance, non-slip surfaces in wet weather, turning-circle space, outdoor path surfaces, and clear signage and lighting along routes.',zd3:'14 checks: accessible reach heights for switches, shelves and counters, roll-under sink and counter access, an accessible bathroom with grab bars and a roll-in shower or accessible toilet, and safe scald prevention.',zd4:'14 checks: a written personal evacuation plan, evacuation chair or buddy-system planning, clear and wide escape routes, smoke alarm placement with visual or vibrating alerts, a meeting point, and backup power for essential equipment.',zd5:'14 checks: stairlifts or platform lifts, smart-home and voice-control adaptations, widened doorways and lowered switches, safe flooring choices, charged and accessible assistive devices, and professional occupational-therapy assessment.',zd6:'14 checks: accessible transport planning, maintaining community and social connection, workplace or education accessibility conversations, safe caregiver lifting technique, respecting autonomy, and peer support resources.',critical:'Critical',high:'High',medium:'Medium',low:'Low',legendCritical:'Critical = immediate action',legendHigh:'High = urgent attention',noResults:'No checks match your search. Try different keywords.',searchPh:'Search checks… e.g. ramp gradient, transfer technique, grab bars, evacuation plan, reach height, turning circle…',who:'Who',what:'What',where:'Where',why:'Why',how:'How',standards:'Standards &amp; Measurements',example:'Real-World Example',quickTip:'Quick Win',markAll:'Mark All Complete',unmarkAll:'Unmark All',expandAll:'Expand All',collapseAll:'Collapse All',celebrate:'All 84 checks complete — your household is set up for safe, confident, independent living. Print your checklist as a keepsake.',collTitle:'The SafeLife Collection',collSub:'One safety system for every stage of life. Every module below is a complete, standalone 84-check system — available separately, or as the full 12-module bundle.',owned:'✓ Current Module',addon:'Available Separately',disclaimer:'This checklist is educational general safety guidance. For major home modifications or equipment decisions, consult an occupational therapist or qualified accessibility professional for advice specific to your needs.',manualTitle:'User Manual',cheatTitle:'Emergency Cheat Sheet',printTitle:'Print or Save as PDF',printHint:'Choose what to print. To save as a PDF instead of printing on paper, choose "Save as PDF" as the printer in the print dialog.',printZone:'Current zone only',printCheat2:'Cheat sheet',printAll:'Full checklist (all 84)',printCheat:'🖨️ Print cheat sheet',langNote:'Safety check content is written in English (verified international guidance). Interface labels switch language.',saved:'Progress saved',loaded:'Progress loaded',cheatContacts:'My emergency contacts',cheatHint:'Make it yours: edit any name or number, add or delete rows. Everything saves automatically on this device and prints on your cheat sheet.',addContact:'+ Add contact',myNotes:'My notes',notesPh:'Equipment specifications, occupational therapist/physiotherapist contact details, transfer technique notes, ramp or lift measurements, evacuation plan details…',rules:'The 10 golden rules',keyNums:'Key measurements at a glance',delRow:'Remove',notCovered:'Topic not covered in this module? Check the cheat sheet, ask your health or accessibility professional, or request it via your SafeLife store page — new checks arrive in free updates.',printNote:'All checks are automatically expanded to full detail when printing — no need to open them first.',mn1:'Newborn',mn2:'Infant',mn3:'Toddler',mn4:'Preschooler',mn5:'School-Age',mn6:'Teenager',mn7:'Young Adult',mn8:'Adult',mn9:'Middle-Aged Adult',mn10:'Active Seniors',mn11:'Advanced Age',mn12:'90+ and Longevity',
+manualBody:'<h4>🚀 Getting started</h4><p>84 checks in 6 zones. Tap any check to see Who / What / Where / Why / How, exact measurements and standards, a real-world example and a quick-win tip.</p><h4>✅ Progress</h4><p>Tick the box to complete a check — bars and counters update instantly. Each zone has Mark All / Unmark All and Expand / Collapse All buttons, and the floating ↑ ↓ arrows jump between checks.</p><h4>🔍 Search &amp; filters</h4><p>The search box filters all 84 checks live across every zone. Tap a risk pill (Critical / High / Medium / Low) to filter by risk level; tap again to clear.</p><h4>🎨 Personalise</h4><p>Pick a colour theme and light or dark mode — remembered on this device. Make the cheat sheet yours: add your own emergency numbers and notes.</p><h4>💾 Save &amp; 🖨️ Print</h4><p>Progress saves automatically on this device as you go. To move your progress to another device or keep a backup, tap 💾 Save — this downloads a small file. On the new device (or after clearing your browser), open the same checklist, tap 📂 Load, and choose that file to restore your progress exactly where you left off. Keep the file somewhere safe, like your email or a notes app. Print the full checklist, one zone, or your personalised cheat sheet — all checks expand automatically when printing. Choose "Save as PDF" in the print dialog to create a PDF.</p>'}
+};
+
+// ═══════════════════════════════════════════
+// TRADEMARK ICON SET — same outline family as the whole collection
+// ═══════════════════════════════════════════
+const _svg = inner => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">' + inner + '</svg>';
+const ICONS = {
+  stage: _svg('<circle cx="8.3" cy="15.5" r="5.1"/><circle cx="8.3" cy="15.5" r="0.9" fill="currentColor" stroke="none"/><path d="M8.3 15.5h7l2.7 3.6"/><path d="M8.3 10.6h4.8l1.7 4.9h3.5"/><circle cx="7.6" cy="5.6" r="1.7"/><path d="M7.6 7.3v2.2"/><circle cx="18.7" cy="19.3" r="1.3"/>'),
+  z1: _svg('<circle cx="12" cy="12" r="7.2"/><circle cx="12" cy="12" r="1.6"/><path d="M12 4.8v2.4M12 16.8v2.4M4.8 12h2.4M16.8 12h2.4M6.9 6.9l1.7 1.7M15.4 15.4l1.7 1.7M17.1 6.9l-1.7 1.7M8.6 15.4l-1.7 1.7"/>'),
+  z2: _svg('<path d="M3.5 19.5h17"/><path d="M3.5 19.5L14 8.5h3.5v11"/><rect x="14" y="8.5" width="3.5" height="11"/><path d="M15.2 13.8h.01"/>'),
+  z3: _svg('<path d="M4 9h9"/><path d="M4 15h9"/><path d="M8.5 9v6"/><path d="M15 6.5a7.5 7.5 0 0 1 0 11"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/>'),
+  z4: _svg('<rect x="4" y="3.5" width="9" height="17" rx="1"/><path d="M8.3 3.5v17"/><circle cx="10.8" cy="12" r="0.8" fill="currentColor" stroke="none"/><path d="M14.5 12h6M17.5 9l3 3-3 3"/>'),
+  z5: _svg('<path d="M4 20V9l8-6 8 6v11"/><path d="M8 20v-6h3.2"/><circle cx="14.5" cy="16.2" r="2.6"/><path d="M14.5 13.6v.9M14.5 18v.9M12.4 16.2h.9M16.7 16.2h.9M13 14.7l.6.6M15.4 17.1l.6.6M16 14.7l-.6.6M12.6 17.1l.6.6"/>'),
+  z6: _svg('<circle cx="8" cy="7" r="2.6"/><path d="M3.5 19.5v-2.3a4.3 4.3 0 0 1 4.3-4.3h.4a4.3 4.3 0 0 1 4.3 4.3v2.3"/><circle cx="17.3" cy="8.4" r="2.1"/><path d="M14.7 19.5v-2a3 3 0 0 1 3-3h1.2a3 3 0 0 1 3 3v2"/>'),
+  stages: [
+    _svg('<circle cx="12" cy="13" r="6.5"/><path d="M12 6.5c0-1.8.8-2.7 2.3-3"/><circle cx="9.7" cy="12.2" r="0.65" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12.2" r="0.65" fill="currentColor" stroke="none"/><path d="M9.9 15c1.4 1.2 2.8 1.2 4.2 0"/>'),
+    _svg('<circle cx="12" cy="7" r="3.2"/><path d="M6.8 20.5v-3.2a5.2 5.2 0 0 1 10.4 0v3.2"/>'),
+    _svg('<path d="M12 3.5l2.5 5.2 5.7.8-4.1 4 1 5.7-5.1-2.7-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/>'),
+    _svg('<rect x="6.5" y="8" width="11" height="12" rx="3"/><path d="M9.5 8V6.2a2.5 2.5 0 0 1 5 0V8"/><rect x="9.7" y="13" width="4.6" height="4" rx="1"/><path d="M6.5 11.5h11"/>'),
+    _svg('<path d="M5 15v-1.5a7 7 0 0 1 14 0V15"/><rect x="4" y="14" width="3.4" height="6" rx="1.6"/><rect x="16.6" y="14" width="3.4" height="6" rx="1.6"/>'),
+    _svg('<path d="M12 4.5L2.8 9l9.2 4.5L21.2 9z"/><path d="M6.8 11.5v3.8c0 1.6 10.4 1.6 10.4 0v-3.8"/><path d="M21.2 9v5"/>'),
+    _svg('<rect x="3.8" y="8" width="16.4" height="11.2" rx="2"/><path d="M9.5 8V6.6A1.6 1.6 0 0 1 11.1 5h1.8a1.6 1.6 0 0 1 1.6 1.6V8M3.8 12.8h16.4"/>'),
+    _svg('<path d="M8.5 9.5v-4c2.3 1.8 4.7 1.8 7 0v4a3.5 3.5 0 0 1-7 0z"/><path d="M12 13v8M12 18c-1.8-.4-3-1.4-3.6-3"/>'),
+    _svg('<circle cx="8.5" cy="5" r="2.1"/><path d="M8.5 7.1c-1.2.4-2 1.5-2 2.8v1.8"/><path d="M8.7 9.6c3.4 0 5.8 2.5 5.8 5.7 0 2.2-1.2 3.9-3 4.9"/><path d="M6.5 11.7v3.4c0 2.2 1 3.9 2.7 5"/>'),
+    _svg('<circle cx="12" cy="5.8" r="2.3"/><path d="M8.2 17.3a3.8 3.8 0 0 1 7.6 0v1.2"/><path d="M6.6 20.5h10.8"/><path d="M8.6 20.5v-3.2M15.4 20.5v-3.2"/><path d="M12 13.4c-.9-.8-1.5-1.3-1.5-1.9a.85.85 0 0 1 1.5-.55.85.85 0 0 1 1.5.55c0 .6-.6 1.1-1.5 1.9z"/>'),
+    _svg('<circle cx="7" cy="5.3" r="2.2"/><path d="M4 19v-3.4a3.4 3.4 0 0 1 3.4-3.4h.6a3.4 3.4 0 0 1 2.6 1.2l1 1.2"/><circle cx="17" cy="9.4" r="1.7"/><path d="M13.9 19v-2.4a2.6 2.6 0 0 1 2.6-2.6h1a2.6 2.6 0 0 1 2.6 2.6V19"/><path d="M9.5 15.3l2.7 1.4"/>'),
+    _svg('<path d="M6.4 8.1c-2.2 0-4 1.8-4 3.9s1.8 3.9 4 3.9c3.4 0 5.2-2.5 5.7-3.9.5-1.4 2.3-3.9 5.7-3.9 2.2 0 4 1.8 4 3.9s-1.8 3.9-4 3.9c-3.4 0-5.2-2.5-5.7-3.9-.5-1.4-2.3-3.9-5.6-3.9z"/>'),
+    _svg('<path d="M8.5 8.2V6.6a3.5 3.5 0 0 1 7 0v1.6"/><rect x="4.3" y="8.2" width="15.4" height="11.8" rx="3.6"/><path d="M4.3 13.2h15.4"/><rect x="10.4" y="10.6" width="3.2" height="2" rx="0.5"/>'),
+    _svg('<circle cx="7.8" cy="12" r="5.3"/><circle cx="16.2" cy="12" r="5.3"/><circle cx="6.3" cy="11.2" r="0.6" fill="currentColor" stroke="none"/><circle cx="9.3" cy="11.2" r="0.6" fill="currentColor" stroke="none"/><circle cx="14.7" cy="11.2" r="0.6" fill="currentColor" stroke="none"/><circle cx="17.7" cy="11.2" r="0.6" fill="currentColor" stroke="none"/><path d="M6.5 13.8c.9.7 1.8.7 2.7 0M14.9 13.8c.9.7 1.8.7 2.7 0"/>'),
+    _svg('<rect x="6" y="4.6" width="12" height="16.4" rx="2.2"/><path d="M9.4 4.6V3.7A1.7 1.7 0 0 1 11.1 2h1.8a1.7 1.7 0 0 1 1.7 1.7v.9"/><path d="M9 13.2l2.2 2.2L15.5 11"/>'),
+    _svg('<path d="M4 11.5l8-6.8 8 6.8"/><path d="M6.2 10.2V19a1 1 0 0 0 1 1h9.6a1 1 0 0 0 1-1v-8.8"/><path d="M9.4 19v-4.6h5.2V19"/><path d="M9 13l2.2 1.6 3.4-3"/>'),
+    _svg('<path d="M12 3v18"/><path d="M8 5h8"/><path d="M9.6 13h4.8"/>'),
+    _svg('<rect x="5" y="9.6" width="14" height="4.8" rx="2.4" transform="rotate(-38 12 12)"/><path d="M12 9.6v4.8" transform="rotate(-38 12 12)"/>'),
+    _svg('<circle cx="8.3" cy="15.5" r="5.1"/><circle cx="8.3" cy="15.5" r="0.9" fill="currentColor" stroke="none"/><path d="M8.3 15.5h7l2.7 3.6"/><path d="M8.3 10.6h4.8l1.7 4.9h3.5"/><circle cx="7.6" cy="5.6" r="1.7"/><path d="M7.6 7.3v2.2"/><circle cx="18.7" cy="19.3" r="1.3"/>')
+  ]
+};
+function injectIcons(){
+  document.getElementById('logo-icon').innerHTML = ICONS.stage;
+  document.getElementById('hero-icon').innerHTML = ICONS.stage;
+  document.querySelectorAll('.zic[data-zi]').forEach(el=>{ el.innerHTML = ICONS[el.dataset.zi] || ''; });
+}
+// ═══════════════════════════════════════════
+// ALL 84 CHECKS — LIMITED MOBILITY & WHEELCHAIR HOUSEHOLD
+// ═══════════════════════════════════════════
+const ZONES = [
+  {
+    id: 1, name: 'Wheelchair Fit, Maintenance & Safe Transfers', icon: '♿',
+    desc: '14 checks covering correct wheelchair fit and sizing, tyre pressure and brake checks, safe transfer technique, transfer boards and slings, avoiding shoulder strain, and battery and cushion care.',
+    checks: [
+      { id:'mb01', num:'MB01', risk:'critical', title:'Wheelchair Fit and Sizing Matches the User',
+        who:'The wheelchair user, especially after a change in body size, weight, or ability',
+        what:'A wheelchair that is the wrong width, depth, or seat height for the person using it, causing pressure points, poor posture, or reduced control',
+        where:'Wherever the wheelchair is used day to day, and wherever it was originally fitted or issued',
+        why:'A poorly fitted chair increases the risk of pressure injuries, back and shoulder strain, and loss of stability during transfers or on uneven ground',
+        how:'Have wheelchair fit reviewed by an occupational therapist or wheelchair services professional at issue and again after any significant change in weight, height, or condition; check that hips, knees and feet are supported without rubbing or overhang',
+        measurement:'Recognised occupational-therapy and wheelchair-service guidance recommends a fit review at issue and whenever the user\'s body or needs change significantly, with no fixed universal interval.',
+        example:'A teenager\'s wheelchair is reassessed and the seat depth adjusted after a growth spurt leaves their knees pressing against the front edge of the seat.',
+        tip:'If the user is sliding forward, leaning to one side, or the footrests no longer sit at a comfortable height, it is time for a fit review — do not wait for a scheduled appointment.' },
+
+      { id:'mb02', num:'MB02', risk:'critical', title:'Tyre Pressure and Wheel Condition Checked Regularly',
+        who:'Anyone using a manual or powered wheelchair with pneumatic (air-filled) tyres',
+        what:'Under-inflated or worn tyres that make the chair harder to push, less stable, and more likely to tip on uneven surfaces',
+        where:'Both rear wheels and any pneumatic front castors',
+        why:'Correct tyre pressure keeps rolling resistance low and stability high — under-inflated tyres significantly increase the effort needed to self-propel and raise fall risk',
+        how:'Check tyre pressure against the value printed on the tyre sidewall using a small pump with a gauge; inspect tread and sidewalls for cracking, and check spokes or wheel rims for damage',
+        measurement:'General mobility-equipment maintenance guidance recommends checking pneumatic tyre pressure at least weekly, and always before a long outing.',
+        example:'A family keeps a small hand pump with a pressure gauge in a hallway drawer and checks tyres every Sunday alongside other household routines.',
+        tip:'Write the correct pressure number on a small sticker near the valve so anyone helping can check it correctly.' },
+
+      { id:'mb03', num:'MB03', risk:'critical', title:'Wheel Brakes Locked Before Every Transfer',
+        who:'Anyone transferring into or out of a wheelchair, and anyone assisting them',
+        what:'A wheelchair that rolls or shifts during a transfer because the brakes were not engaged',
+        where:'Bedside, bathroom, vehicle door, and anywhere else a transfer happens',
+        why:'An unexpected roll during a transfer is one of the most common causes of falls for wheelchair users and their caregivers',
+        how:'Engage both wheel locks fully before beginning any transfer and check that the chair does not move when gently pushed; never rely on a single brake or an assumption that the floor is level enough to prevent rolling',
+        measurement:'Recognised manual-handling and wheelchair-safety guidance treats brake engagement as a mandatory first step before any transfer, with no exceptions for "quick" moves.',
+        example:'A caregiver builds a habit of saying the transfer checklist out loud — "brakes, footrests, angle" — before every single transfer, even familiar ones.',
+        tip:'Test the brakes with a firm push before every transfer, not just a glance — a brake can look engaged but not be fully seated.' },
+
+      { id:'mb04', num:'MB04', risk:'high', title:'Footrests and Armrests Cleared Before Transfer',
+        who:'The wheelchair user and anyone assisting with transfers',
+        what:'Footrests or armrests left in place, causing a trip, a bruised shin, or an awkward, unbalanced transfer',
+        where:'Any transfer location — bed, chair, vehicle, toilet',
+        why:'Footrests and fixed armrests reduce the space needed to pivot or step through safely and are a common cause of skin tears and bruising during transfers',
+        how:'Swing away or remove footrests and, where the chair allows, flip up or detach armrests before starting the transfer; confirm there is a clear, direct path for the user\'s feet and body',
+        measurement:'Recognised manual-handling guidance for wheelchair transfers includes clearing obstructing chair components as a standard preparation step.',
+        example:'A household labels the release lever on each footrest with a bright sticker so a substitute caregiver can find it quickly.',
+        tip:'Practise the swing-away motion when calm and unhurried so it becomes automatic during a rushed or tired moment.' },
+
+      { id:'mb05', num:'MB05', risk:'critical', title:'Safe, Practised Transfer Technique Between Bed and Wheelchair',
+        who:'The wheelchair user and any caregiver assisting with transfers',
+        what:'An unplanned or rushed transfer technique that risks a fall, skin shearing, or strain for either person',
+        where:'Bedroom, and any other room with a bed, sofa, or chair used for transfers',
+        why:'Bed-to-chair transfers happen multiple times a day in many households — a small technique error repeated daily carries a high cumulative injury risk',
+        how:'Position the wheelchair at the angle recommended for the specific transfer method being used, lock brakes, clear footrests, and use a consistent, practised technique (standing pivot, sliding board, or hoist) agreed with a professional',
+        measurement:'Recognised occupational-therapy and manual-handling guidance recommends learning and practising a specific transfer technique with a professional rather than improvising, and reviewing it if it starts to feel unsafe or effortful.',
+        example:'A family has a written, illustrated transfer guide taped inside the wardrobe door so every caregiver — including occasional helpers — uses the same safe method.',
+        tip:'If a transfer starts to feel harder or less stable than before, treat that as a signal to review technique or equipment, not something to push through.' },
+
+      { id:'mb06', num:'MB06', risk:'high', title:'Transfer Boards Used Correctly Where Recommended',
+        who:'Anyone who uses a sliding transfer board as part of their transfer technique',
+        what:'A transfer board used at the wrong angle, on an unstable surface, or without checking it is correctly positioned before weight is placed on it',
+        where:'Between the wheelchair and bed, toilet, shower chair, or vehicle seat',
+        why:'An incorrectly placed transfer board can slip, tip, or leave a gap that causes a fall partway through the transfer',
+        how:'Position the board so it bridges the gap securely with both ends well supported, check it does not rock or slide before transferring weight onto it, and remove it immediately after the transfer so it is not a trip hazard',
+        measurement:'Recognised occupational-therapy guidance for transfer boards recommends professional instruction on correct angle and positioning for each specific transfer, rather than a single universal technique.',
+        example:'A family keeps the transfer board in the same labelled spot by the bed every night so it is never searched for in the dark.',
+        tip:'Check the board surface periodically for cracks or rough edges that could catch skin or clothing during a slide.' },
+
+      { id:'mb07', num:'MB07', risk:'medium', title:'Slings and Hoists Inspected Before Use',
+        who:'Households using a hoist and sling system for transfers',
+        what:'A sling or hoist used without checking straps, clips, and the weight rating, risking a drop or tear during a lift',
+        where:'Wherever the hoist is used — typically bedroom or bathroom',
+        why:'Worn straps, damaged clips, or an incorrectly sized sling are a known cause of falls during hoisted transfers',
+        how:'Visually inspect the sling for fraying or damage and check clips engage fully before every use; confirm the sling size and the hoist\'s weight rating match the user, and have equipment serviced on the schedule recommended by the supplier',
+        measurement:'Recognised moving-and-handling equipment guidance recommends a visual check before each use and a full service inspection at the interval set by the manufacturer or supplier.',
+        example:'A caregiver runs a quick two-second strap check every time before switching on the hoist, as part of the same routine every day.',
+        tip:'Keep the sling\'s weight rating and size written on a tag inside it so any caregiver can confirm it is the right one.' },
+
+      { id:'mb08', num:'MB08', risk:'high', title:'Safe Transfer Technique To and From a Vehicle',
+        who:'Anyone who transfers into a car, van, or accessible vehicle',
+        what:'An awkward, twisting transfer between wheelchair and vehicle seat that strains the back or risks a fall on an uneven kerb or driveway',
+        where:'Driveway, kerbside, or accessible parking bay',
+        why:'Vehicle transfers combine an uneven or sloped surface with a higher, angled seat, increasing both fall and strain risk compared with a flat indoor transfer',
+        how:'Park on the flattest available surface, position the wheelchair as close and as parallel to the vehicle seat as space allows, lock brakes, and use the same practised transfer technique used indoors wherever possible',
+        measurement:'Recognised accessible-transport and occupational-therapy guidance recommends practising vehicle transfers specifically, since the surface and seat height differ from indoor transfers.',
+        example:'A family always reverses into the driveway so the accessible side door lines up with the flattest, most level section of paving.',
+        tip:'A portable transfer handle or grab bar fitted to the vehicle door frame can make a real difference to transfer stability.' },
+
+      { id:'mb09', num:'MB09', risk:'medium', title:'Safe Transfer Technique To and From the Toilet',
+        who:'Anyone transferring to and from the toilet independently or with help',
+        what:'A cramped bathroom layout or missing grab bars that force an unsafe, unsupported transfer',
+        where:'The bathroom or accessible toilet',
+        why:'Toilet transfers happen several times a day and often in a hurry, in a room with hard surfaces close by — a fall here is more likely to cause injury',
+        how:'Ensure grab bars are positioned and rated for the transfer method used, position the wheelchair at the angle practised with a professional, and keep the floor dry and clear before starting',
+        measurement:'Recognised accessible-design guidance places grab bars at approximately 800–900mm (31–35in) from the floor, positioned to match the individual\'s transfer technique — confirm exact placement with an occupational therapist.',
+        example:'A household fits a fold-down grab bar on the open side of the toilet so it does not narrow the doorway when not in use.',
+        tip:'Keep a non-slip bath mat with a secure backing right at the transfer point, not just inside the shower.' },
+
+      { id:'mb10', num:'MB10', risk:'high', title:'Avoiding Repetitive Shoulder Strain from Transfers',
+        who:'The wheelchair user, especially manual wheelchair users who self-transfer several times a day',
+        what:'Cumulative shoulder and wrist strain from repeated push-up style transfers and self-propelling, which can lead to chronic pain or injury over time',
+        where:'Anywhere transfers or self-propelling happen throughout the day',
+        why:'Shoulder overuse injury is one of the most common long-term health issues among manual wheelchair users, and it directly affects independence if it worsens',
+        how:'Vary transfer technique where possible, use assistive equipment (transfer boards, raised surfaces) to reduce the height and force of each transfer, and build in strength and flexibility exercises recommended by a physiotherapist',
+        measurement:'Recognised physiotherapy guidance for manual wheelchair users recommends a proactive shoulder-care routine and early review of any new or worsening shoulder pain, rather than waiting for it to become severe.',
+        example:'A wheelchair user adds a short shoulder-stretching routine to their morning schedule after a physiotherapist review, alongside adjusting a bed height to reduce transfer distance.',
+        tip:'Treat new or worsening shoulder pain as an equipment and technique review trigger, not just something to push through.' },
+
+      { id:'mb11', num:'MB11', risk:'medium', title:'Powered Wheelchair Battery Charging Safety',
+        who:'Households with a powered wheelchair or scooter',
+        what:'Charging practices that risk battery damage, reduced range, or a rare but serious overheating event',
+        where:'Wherever the powered chair is charged, typically a hallway, bedroom, or utility space',
+        why:'Correct charging protects both the equipment and the household, and an unreliable charge is a genuine safety issue if the chair is needed for an evacuation',
+        how:'Charge on a stable, ventilated surface away from bedding or flammable materials, follow the manufacturer\'s charging routine, and avoid leaving a faulty charger or cable in use',
+        measurement:'Recognised mobility-equipment manufacturer guidance recommends charging on a hard, ventilated surface and inspecting charging cables and connectors regularly for wear.',
+        example:'A family designates a charging spot near an accessible outlet in the hallway, away from curtains and bedding, and checks the cable monthly.',
+        tip:'Keep the chair charged to a comfortable working level overnight rather than letting it run flat — a flat battery limits evacuation options in an emergency.' },
+
+      { id:'mb12', num:'MB12', risk:'high', title:'Seating Cushion Fit and Pressure-Injury Prevention',
+        who:'Anyone who sits in a wheelchair for extended periods',
+        what:'A cushion that is worn, the wrong type, or not checked regularly, increasing the risk of a pressure injury developing unnoticed',
+        where:'The wheelchair seat',
+        why:'Pressure injuries can develop within hours in someone with reduced sensation or mobility, and are far easier to prevent than to treat once they occur',
+        how:'Use a cushion matched to the individual\'s risk level and recommended by an occupational therapist or tissue-viability professional, check skin regularly for redness that does not fade, and follow a repositioning routine while seated',
+        measurement:'Recognised pressure-injury-prevention guidance recommends a position shift or weight relief approximately every 15–30 minutes for those at higher risk, and a daily skin check — confirm the exact interval with the individual\'s clinician.',
+        example:'A caregiver sets a gentle phone reminder every 20 minutes during the day to prompt a small weight shift or repositioning.',
+        tip:'Replace a cushion once it has visibly compressed or lost its recommended support — a flattened cushion no longer protects against pressure the way it should.' },
+
+      { id:'mb13', num:'MB13', risk:'medium', title:'A Regular Maintenance Schedule for the Wheelchair',
+        who:'Every household with a manual or powered wheelchair',
+        what:'Small mechanical issues — loose bolts, worn brake pads, squeaking wheels — left unaddressed until they cause a bigger failure',
+        where:'The whole wheelchair, checked as a routine, not just when something already feels wrong',
+        why:'Regular maintenance catches small problems before they become safety failures, and keeps the chair reliable for daily use and emergencies alike',
+        how:'Run a brief visual and functional check weekly (tyres, brakes, folding mechanism, seating), and book a full professional service on the schedule recommended by the supplier or manufacturer',
+        measurement:'Recognised wheelchair-service guidance recommends a brief user check weekly and a full professional service at least annually, or more often for heavily used powered chairs — confirm the specific interval with the supplier.',
+        example:'A family keeps a simple maintenance checklist stuck inside a nearby cupboard door and ticks it off every Sunday.',
+        tip:'A squeak, a new wobble, or brakes that feel less firm are all worth investigating immediately rather than waiting for the next scheduled service.' },
+
+      { id:'mb14', num:'MB14', risk:'low', title:'Spare Parts and a Repair Contact Kept on Hand',
+        who:'Every household relying on a wheelchair for daily mobility',
+        what:'No plan for a quick repair or loan chair if the wheelchair breaks down unexpectedly',
+        where:'Wherever household emergency information and contacts are kept',
+        why:'A wheelchair breakdown is not just an inconvenience — it can remove someone\'s only means of safe, independent movement until it is fixed',
+        how:'Keep the supplier\'s repair contact number saved and visible, know whether a loan or temporary replacement chair is available locally, and keep basic spares (inner tube, puncture kit, spare brake pad) if trained to use them',
+        measurement:'Recognised mobility-equipment support guidance recommends keeping supplier contact details accessible and confirming loan-equipment options before they are needed, not during a breakdown.',
+        example:'A family saves their wheelchair supplier\'s number under "Wheelchair Repair" in a shared phone contacts list, alongside the model and serial number.',
+        tip:'Note the wheelchair\'s make, model, and serial number somewhere easy to find — it speeds up ordering the right replacement part.' }
+    ]
+  },
+  {
+    id: 2, name: 'Ramps, Doorways & Accessible Pathways', icon: '🛤️',
+    desc: '14 checks covering safe ramp gradient and width, doorway and threshold clearance, non-slip surfaces in wet weather, turning-circle space, outdoor path surfaces, and clear signage and lighting.',
+    checks: [
+      { id:'mb15', num:'MB15', risk:'critical', title:'Ramp Gradient Meets a Safe, Manageable Slope',
+        who:'Anyone using a wheelchair, walker, or mobility scooter to enter or leave the home',
+        what:'A ramp that is too steep for safe, controlled use, risking a rollback or tip, especially for self-propelled manual wheelchair users',
+        where:'Every ramp used to enter, exit, or move between levels of the home',
+        why:'A ramp steeper than a safe gradient is difficult or dangerous to self-propel up, and can cause a dangerous rollback or loss of control going down',
+        how:'Have ramp gradient assessed against recognised accessible-design ratios for the total rise, favour a gentler gradient where space allows, and add handrails on ramps above a modest rise',
+        measurement:'Recognised accessible-design guidance suggests a maximum gradient of approximately 1:12 (about 4.8°) for ramps with a significant rise, with gentler slopes of roughly 1:15–1:20 preferred where space allows — confirm with local accessible-design guidance for the specific rise.',
+        example:'A family replaces a short, steep timber ramp with a longer, gently sloped one that loops back on itself to fit the same garden space.',
+        tip:'If a manual wheelchair user needs help or momentum to get up a ramp safely, treat that as a sign the gradient needs reviewing.' },
+
+      { id:'mb16', num:'MB16', risk:'high', title:'Ramp Width Allows Safe, Controlled Passage',
+        who:'Anyone using a wheelchair or mobility aid on the ramp',
+        what:'A ramp too narrow to give a comfortable safety margin on either side of the wheels',
+        where:'Every ramp in and around the home',
+        why:'A narrow ramp increases the risk of a wheel running off the edge, especially when turning onto or off the ramp',
+        how:'Provide a clear ramp width with margin either side of the widest mobility device used in the household, and add raised edge protection (kerbs or rails) where a drop-off exists at the sides',
+        measurement:'Recognised accessible-design guidance recommends a minimum clear ramp width of approximately 900–1000mm (35–39in) — confirm against the width of the specific mobility device used.',
+        example:'A household adds low timber kerb rails along both edges of an outdoor ramp after noticing a wheel had come close to the edge.',
+        tip:'Measure ramp width against the actual wheelchair or scooter used in the home, including any wider accessories, rather than a generic assumption.' },
+
+      { id:'mb17', num:'MB17', risk:'critical', title:'Doorway Clearance Allows Safe Wheelchair Passage',
+        who:'Anyone using a wheelchair or wide mobility aid to move through the home',
+        what:'A doorway too narrow for the wheelchair to pass through without scraping knuckles, catching the frame, or requiring an awkward angled approach',
+        where:'Every internal and external doorway used regularly',
+        why:'A doorway that is too tight forces repeated awkward manoeuvring, increases the risk of hand and finger injury, and can block a fast exit in an emergency',
+        how:'Measure the clear opening width (door open to 90 degrees) against the wheelchair\'s widest point, and consider offset or wider hinges, or widening the frame, for doorways below the accessible clearance',
+        measurement:'Recognised accessible-design guidance (general principles consistent with ISO 21542) recommends a minimum clear doorway width of approximately 800–850mm (32–33in) for wheelchair passage — confirm against the specific chair\'s width plus hand clearance.',
+        example:'A family fits offset hinges to a bathroom door, gaining several extra centimetres of clearance without needing to rebuild the frame.',
+        tip:'Test doorway clearance with the actual wheelchair, not a tape measure alone — real-world passage accounts for hand position and turning angle.' },
+
+      { id:'mb18', num:'MB18', risk:'high', title:'Thresholds and Level Changes Are Minimised or Ramped',
+        who:'Anyone using wheels to move through the home',
+        what:'A raised threshold or small step between rooms that catches a wheel or front castor, risking a stall or tip',
+        where:'Doorways between rooms, and the transition to outdoor spaces such as a patio or garden',
+        why:'Even a small unramped level change can stop a wheelchair abruptly or cause a front-caster catch, which is a common cause of forward tips',
+        how:'Remove or reduce raised thresholds where possible, or fit a small bevelled threshold ramp; check every doorway in regular use, not just the main entrance',
+        measurement:'Recognised accessible-design guidance recommends threshold height changes be minimised and, where unavoidable, bevelled or ramped rather than left as a sharp lip.',
+        example:'A household fits low-profile rubber threshold ramps at three internal doorways where the original thresholds were raised by a couple of centimetres.',
+        tip:'Check thresholds with eyes at wheel height, not standing height — a barely visible lip from above can be a real hazard for the front castors.' },
+
+      { id:'mb19', num:'MB19', risk:'critical', title:'Ramp and Path Surfaces Stay Slip-Resistant in Wet Weather',
+        who:'Anyone using a wheelchair or walking aid outdoors',
+        what:'A ramp or path surface that becomes slippery when wet, icy, or covered in leaves',
+        where:'Outdoor ramps, paths, and any covered or uncovered walkway to the home',
+        why:'A loss of traction on a ramp or slope is far more dangerous than on flat ground, and outdoor surfaces are exposed to weather year-round',
+        how:'Choose or retrofit slip-resistant ramp and path surfacing, keep leaves, moss, and debris cleared, and treat icy conditions promptly with a suitable, non-corrosive product',
+        measurement:'Recognised accessible-design guidance recommends slip-resistant surfacing for all accessible routes, with a texture that remains effective when wet — confirm surface rating with the product supplier.',
+        example:'A family adds a textured, slip-resistant coating to an outdoor timber ramp after noticing it became slick in light rain.',
+        tip:'Check outdoor ramp surfaces after the first rain following any new coating or repair — that is when a slip risk shows up quickly.' },
+
+      { id:'mb20', num:'MB20', risk:'high', title:'Adequate Turning-Circle Space in Hallways and Rooms',
+        who:'Anyone using a wheelchair to move and turn around the home',
+        what:'Not enough clear floor space to turn the wheelchair around fully in hallways, bathrooms, or bedrooms',
+        where:'Hallways, doorway approaches, bathrooms, and the main living and sleeping areas',
+        why:'Without enough turning space, a wheelchair user has to reverse, bump furniture, or make repeated awkward manoeuvres that increase strain and collision risk',
+        how:'Keep a clear turning circle at key points (near beds, in front of the toilet and shower, at hallway junctions), rearranging or removing furniture as needed',
+        measurement:'Recognised accessible-design guidance recommends a turning circle of approximately 1500mm (59in) diameter for a manual wheelchair at key locations — confirm against the specific chair\'s turning radius.',
+        example:'A family moves a bulky armchair out of a bedroom corner to open up enough space for a full turn near the bed.',
+        tip:'Mark out the needed turning space with tape on the floor temporarily to see clearly what needs to move.' },
+
+      { id:'mb21', num:'MB21', risk:'medium', title:'Outdoor Path Surfaces Are Even and Well-Maintained',
+        who:'Anyone using wheels or a walking aid on outdoor paths around the home',
+        what:'Cracked paving, loose gravel, or uneven ground on paths leading to and around the home',
+        where:'Garden paths, driveway, and the route to bins, parking, or a garden building',
+        why:'Uneven outdoor surfaces are a common cause of tips and falls, and are easy to overlook because they develop gradually',
+        how:'Repair cracked or uneven paving promptly, replace loose gravel with a firmer accessible surface on main routes, and walk or wheel the route periodically to check for new hazards',
+        measurement:'Recognised accessible-design guidance recommends firm, stable, slip-resistant surfacing for all outdoor accessible routes rather than loose or uneven materials.',
+        example:'A household replaces a short gravel section of path between the driveway and front door with firm paving slabs.',
+        tip:'Walk the main outdoor route seasonally — root growth, frost heave, and weather all shift outdoor surfaces over time.' },
+
+      { id:'mb22', num:'MB22', risk:'medium', title:'Temporary Ramp Solutions Are Stable and Rated for the Load',
+        who:'Households using a portable or temporary ramp, for example over a single step or for travel',
+        what:'A lightweight portable ramp used beyond its rated weight capacity, or not properly secured, risking a slip or collapse',
+        where:'Any single-step threshold, porch, or temporary access point',
+        why:'Portable ramps vary widely in weight rating and stability, and an unsecured or overloaded ramp can shift under load',
+        how:'Check the ramp\'s weight rating against the combined weight of the user and the wheelchair, secure it against slipping with the fittings provided, and inspect it for damage before each use',
+        measurement:'Recognised mobility-equipment guidance recommends confirming a portable ramp\'s weight rating in the product documentation before use, and securing it per the manufacturer\'s instructions.',
+        example:'A family keeps a folding portable ramp in the car for accessible outings and checks its non-slip feet are seated properly before each use.',
+        tip:'Treat a portable ramp as a temporary solution — plan a permanent, wider, and better-secured ramp for any regularly used step.' },
+
+      { id:'mb23', num:'MB23', risk:'high', title:'Clear Signage and Lighting Along Accessible Routes',
+        who:'Anyone moving through the home or approach, especially after dark or in low light',
+        what:'Poorly lit ramps, paths, or thresholds that are hard to judge safely, especially at night',
+        where:'Ramps, paths, doorway thresholds, and any level change',
+        why:'Reduced visibility makes it far harder to judge a slope, edge, or step accurately, increasing fall risk regardless of daytime mobility skill',
+        how:'Add reliable lighting along ramps and paths, particularly at the top and bottom of any slope or step, and consider motion-sensor lighting for routes used after dark',
+        measurement:'Recognised accessible-design guidance recommends consistent, glare-free lighting along all accessible routes, with particular attention to level changes and ramp transitions.',
+        example:'A household installs a motion-sensor light at the top and bottom of the driveway ramp so it switches on automatically after dusk.',
+        tip:'Check every accessible route in the dark at least once — daytime visibility can hide a lighting gap that only shows up at night.' },
+
+      { id:'mb24', num:'MB24', risk:'medium', title:'Doorway Approach Space Is Kept Clear',
+        who:'Anyone approaching a doorway in a wheelchair',
+        what:'Furniture, shoes, bins, or other clutter placed close to a doorway, blocking the approach or turning space needed to open the door and pass through',
+        where:'The floor space directly in front of and behind every regularly used doorway',
+        why:'A wheelchair needs room to approach a door, reach the handle, and manoeuvre through — clutter in this space causes daily friction and can block a hasty exit',
+        how:'Keep a clear approach zone in front of every doorway used regularly, and build in a household habit of returning shoes, bags, and bins to designated storage rather than leaving them by doors',
+        measurement:'Recognised accessible-design guidance recommends clear, unobstructed floor space on the approach side of every accessible doorway, sized to the specific mobility device used.',
+        example:'A family adds a shoe rack just inside the entrance instead of leaving shoes on the floor by the front door.',
+        tip:'Do a five-minute "doorway walk-through" once a week to catch clutter creeping back into approach spaces.' },
+
+      { id:'mb25', num:'MB25', risk:'medium', title:'Door Handles and Hardware Are Reachable and Usable',
+        who:'The wheelchair user and anyone with reduced hand strength or dexterity',
+        what:'Door handles, locks, or door closers that are too high, too stiff, or require a strong grip and twisting motion to operate',
+        where:'Every regularly used door, including external doors and any door with a spring-loaded closer',
+        why:'A door that cannot be opened independently removes independence at exactly the point of entry and exit, and can be a problem in an emergency',
+        how:'Fit lever-style handles instead of round knobs, position them at a reachable height, and adjust or replace overly stiff door closers where they make independent opening difficult',
+        measurement:'Recognised accessible-design guidance recommends lever-style hardware operable with a closed fist, positioned at approximately 900–1050mm (35–41in) from the floor.',
+        example:'A household replaces round door knobs throughout the ground floor with lever handles as part of a single weekend project.',
+        tip:'Test every door handle with a closed fist, not fingertips — that quickly reveals which ones genuinely need replacing.' },
+
+      { id:'mb26', num:'MB26', risk:'low', title:'Outdoor Ramp and Path Edges Are Clearly Marked',
+        who:'Anyone using the ramp or path in low light or with reduced vision',
+        what:'Ramp or path edges that are hard to distinguish from the surrounding ground, especially where there is a drop-off',
+        where:'The edges of outdoor ramps and raised paths',
+        why:'A clearly marked edge helps anyone judge the safe width of the path, reducing the risk of a wheel or foot going over the side',
+        how:'Use a contrasting colour strip or edge marking along ramp and path boundaries where a drop-off exists, and keep the marking well maintained as it weathers',
+        measurement:'Recognised accessible-design guidance recommends visual contrast marking at changes in level and along the edges of ramps where a fall risk exists.',
+        example:'A family paints a bright contrasting stripe along the edge of a raised outdoor ramp after a near-miss in low evening light.',
+        tip:'Refresh edge markings when they start to fade — a worn stripe stops doing its job long before it disappears completely.' },
+
+      { id:'mb27', num:'MB27', risk:'medium', title:'A Second, Backup Accessible Route Is Identified Where Possible',
+        who:'Every household relying on a single main accessible entrance or route',
+        what:'No planned alternative if the main ramp, path, or doorway becomes temporarily unusable — for example, blocked by ice, a delivery, or building work',
+        where:'The whole approach to and through the home',
+        why:'Relying on a single accessible route with no backup can leave someone unable to enter or exit the home safely if that route is temporarily blocked',
+        how:'Identify and, where feasible, prepare a second accessible route or entrance, even if it is used less often, and keep it genuinely clear and usable rather than treated as storage space',
+        measurement:'Recognised accessible-design and emergency-planning guidance recommends identifying an alternative accessible route wherever the home layout allows one.',
+        example:'A household keeps a side gate and back door route clear and usable as a backup after the front ramp was briefly blocked by a delivery van.',
+        tip:'Test the backup route occasionally, not just plan it on paper — a route that looks fine in theory may have a hidden obstacle in practice.' },
+
+      { id:'mb28', num:'MB28', risk:'medium', title:'Accessible Parking or Drop-Off Space Is Planned and Kept Clear',
+        who:'Anyone who needs to load or unload a wheelchair from a vehicle at the home',
+        what:'No dedicated, adequately sized space to park or pull up close to the accessible entrance, forcing a longer or riskier journey from the vehicle',
+        where:'The driveway, kerbside, or any regular vehicle drop-off point',
+        why:'A shorter, well-planned distance between the vehicle and the accessible entrance reduces exposure to weather, uneven ground, and general fall risk',
+        how:'Keep a wide enough space clear near the accessible entrance for a wheelchair-accessible vehicle to load and unload safely, and agree a household rule that this space is not used for general parking or storage',
+        measurement:'Recognised accessible-design guidance recommends dedicated accessible parking or drop-off space with sufficient side clearance for a wheelchair lift or ramp to deploy fully.',
+        example:'A family marks out a section of the driveway with a small sign as the reserved accessible loading space, so it never gets blocked by visitors\' cars.',
+        tip:'Measure the actual side clearance needed for the vehicle\'s ramp or lift to deploy fully before assuming a space is wide enough.' }
+    ]
+  },
+  {
+    id: 3, name: 'Reach Zones & Kitchen/Bathroom Accessibility', icon: '🚿',
+    desc: '14 checks covering accessible reach heights for switches, shelves and counters, roll-under sink and counter access, an accessible bathroom with grab bars, and safe scald prevention.',
+    checks: [
+      { id:'mb29', num:'MB29', risk:'high', title:'Light Switches and Controls Set at an Accessible Height',
+        who:'Anyone operating switches, thermostats, or entry systems from a seated position',
+        what:'Switches and controls mounted at a standing-height that are difficult or impossible to reach from a wheelchair',
+        where:'Light switches, thermostats, intercoms, and entry keypads throughout the home',
+        why:'Controls that cannot be reached independently create daily friction and reduce independence for routine tasks',
+        how:'Lower or relocate switches and controls into the recommended accessible reach zone, or add a remote/smart control where physical relocation is not practical',
+        measurement:'Recognised accessible-design guidance recommends light switch and control height of approximately 900–1100mm (35–43in) from the floor for seated reach.',
+        example:'A household lowers light switches in main living areas during a repaint, moving them from standard height into an easy seated-reach zone.',
+        tip:'A smart plug or voice-controlled switch can bridge the gap quickly for a control that is expensive or impractical to relocate immediately.' },
+
+      { id:'mb30', num:'MB30', risk:'medium', title:'Shelves and Storage Kept Within Comfortable Reach',
+        who:'Anyone accessing everyday items from a seated position',
+        what:'Frequently used items stored on high shelves or in low floor-level cupboards that require stretching, standing, or an unsafe reach',
+        where:'Kitchen cupboards, wardrobes, bathroom cabinets, and general storage throughout the home',
+        why:'An unsafe stretch or overreach to retrieve a commonly used item is a frequent, everyday source of falls and strain injuries',
+        how:'Move frequently used items into the comfortable reach zone, and reserve higher or lower storage for rarely used items only',
+        measurement:'Recognised accessible-design guidance places a comfortable forward seated reach zone at approximately 400–1200mm (16–47in) from the floor, and a side reach zone at approximately 230–1370mm (9–54in) — individual reach varies, so confirm with the specific person.',
+        example:'A family reorganises kitchen cupboards so everyday plates, mugs, and pans sit on the middle shelves, with seasonal items moved to the top shelf.',
+        tip:'A simple reaching aid (grabber tool) is a useful backup for the occasional item stored slightly out of the ideal zone, but should not replace reorganising daily-use storage.' },
+
+      { id:'mb31', num:'MB31', risk:'high', title:'Roll-Under Access at the Kitchen Sink and Counter',
+        who:'Anyone preparing food or washing up from a seated position',
+        what:'A kitchen sink or counter with no clearance underneath for a wheelchair to roll close, forcing an awkward side-on reach',
+        where:'The kitchen sink and at least one section of the main food-preparation counter',
+        why:'Being able to roll directly under a sink or counter allows a much safer, more stable working position for tasks involving hot water, sharp tools, or heavy pans',
+        how:'Provide roll-under clearance at the sink and at least part of the counter where feasible, insulate exposed hot-water pipes underneath to prevent burns, and consider a lowered or adjustable-height counter section',
+        measurement:'Recognised accessible-design guidance recommends knee and toe clearance of approximately 685mm (27in) height and sufficient depth under an accessible sink or counter section — confirm exact dimensions with an accessibility professional for the specific kitchen.',
+        example:'A household lowers one section of counter and insulates the sink pipes beneath it as part of a kitchen accessibility upgrade.',
+        tip:'Insulating or boxing in hot-water pipes under a roll-under sink is a simple, inexpensive step that prevents a real burn risk.' },
+
+      { id:'mb32', num:'MB32', risk:'critical', title:'Accessible Bathroom Fittings: Grab Bars, Roll-In Shower or Accessible Toilet',
+        who:'Anyone using the bathroom independently or with assistance',
+        what:'A bathroom without properly positioned grab bars, a step-in shower, or a toilet height that is not suited to the person\'s transfer method',
+        where:'The main bathroom used by the wheelchair user',
+        why:'The bathroom combines wet, hard surfaces with frequent transfers, making it one of the highest-risk rooms in the home for wheelchair users',
+        how:'Fit grab bars rated for body weight in positions matched to the individual\'s transfer technique, install a roll-in or low-threshold shower where feasible, and use a raised or accessible-height toilet if standard height is unsuitable',
+        measurement:'Recognised accessible-design guidance places grab bars at approximately 800–900mm (31–35in) from the floor and recommends a roll-in shower with a threshold of no more than a small bevelled lip — confirm exact placement with an occupational therapist for the individual\'s technique.',
+        example:'A family converts a step-in bath to a level-access roll-in shower with a fold-down seat and two grab bars, planned with an occupational therapist.',
+        tip:'Grab bars must be fixed into solid structure, not just tile or plasterboard — confirm secure wall fixing before relying on any bar for weight-bearing support.' },
+
+      { id:'mb33', num:'MB33', risk:'medium', title:'Lowered or Adjustable Kitchen Work Surfaces Where Needed',
+        who:'Anyone preparing food from a seated position',
+        what:'Standard-height counters that force an uncomfortable or unstable working posture for food preparation',
+        where:'The main kitchen preparation area',
+        why:'A comfortable working height reduces strain and improves control when using knives, hot pans, or small appliances',
+        how:'Lower at least one section of counter to a seated-accessible height, or install an adjustable-height counter section where a full renovation is not practical',
+        measurement:'Recognised accessible-design guidance recommends a seated work-surface height of approximately 760–850mm (30–33in), adjusted to the individual\'s wheelchair and reach — confirm with an occupational therapist.',
+        example:'A household adds a small pull-out lowered board beneath the main counter, giving a seated food-prep surface without a full kitchen rebuild.',
+        tip:'A portable adjustable-height table or tray can provide an interim accessible work surface while a permanent solution is planned.' },
+
+      { id:'mb34', num:'MB34', risk:'medium', title:'Reach Tools and Adapted Utensils Kept Accessible',
+        who:'Anyone with reduced reach or grip strength preparing food or completing daily tasks',
+        what:'No adapted tools available for reaching, gripping, or opening items that are otherwise difficult from a seated position or with reduced hand strength',
+        where:'Kitchen, bathroom, and general living areas',
+        why:'Simple adapted tools can restore independence for tasks that would otherwise require help every time',
+        how:'Identify recurring difficult tasks (reaching, opening jars, gripping utensils) and introduce the specific adapted tool recommended by an occupational therapist, storing it within easy reach',
+        measurement:'Recognised occupational-therapy guidance recommends matching adaptive equipment to the specific task and individual ability, rather than a generic one-size-fits-all kit.',
+        example:'An occupational therapist recommends a long-handled reacher and a jar-opening aid, both kept in a labelled kitchen drawer within easy seated reach.',
+        tip:'Review adapted tools periodically — needs and abilities can change, and a tool that helped a year ago may no longer be the best fit.' },
+
+      { id:'mb35', num:'MB35', risk:'high', title:'Appliance Controls Are Within Reach and Usable',
+        who:'Anyone operating kitchen or laundry appliances from a seated position',
+        what:'Appliance controls positioned at the top, back, or a height that requires standing or an unsafe stretch to reach',
+        where:'Oven, hob, washing machine, dryer, and other major appliances',
+        why:'Appliances with high-risk features (heat, moving parts) are more dangerous to operate with an unsafe reach or unstable posture',
+        how:'Where possible, choose or reposition appliances with front-mounted controls, or use a long-handled tool for controls that cannot be relocated',
+        measurement:'Recognised accessible-design guidance recommends appliance controls positioned within the individual\'s confirmed seated reach zone, generally within approximately 1200mm (47in) from the floor.',
+        example:'A household chooses a front-control washing machine and raises it on a low platform so the door and controls sit within comfortable seated reach.',
+        tip:'When appliances cannot be relocated, a simple long-handled tool or mirror can help confirm a hob or oven setting safely from a seated position.' },
+
+      { id:'mb36', num:'MB36', risk:'critical', title:'Scald Prevention at Accessible-Height Fixtures',
+        who:'Anyone using accessible-height sinks, showers, or hot-water fixtures',
+        what:'Hot water delivered at a temperature or from unprotected pipework that risks a scald, particularly where reduced sensation could delay noticing',
+        where:'Kitchen sink, bathroom sink, and shower or bath fixtures',
+        why:'Reduced sensation in some conditions means a scald can go unnoticed longer, and roll-under access can place skin closer to hot pipework',
+        how:'Fit thermostatic mixing valves to limit maximum water temperature, insulate or box in any exposed hot pipework under accessible sinks, and test water temperature before use',
+        measurement:'Recognised scald-prevention guidance recommends limiting hot water delivered to accessible fixtures to a maximum of approximately 43–46°C (109–115°F) using a thermostatic mixing valve.',
+        example:'A family fits a thermostatic mixing valve to the bathroom shower and basin as part of an accessibility upgrade, alongside pipe insulation under the sink.',
+        tip:'Test and confirm the thermostatic valve setting periodically — valves can drift out of calibration over time.' },
+
+      { id:'mb37', num:'MB37', risk:'medium', title:'Storage for Mobility and Bathing Aids Is Organised and Reachable',
+        who:'Anyone using bathing aids, transfer equipment, or other mobility-related accessories',
+        what:'Bathing benches, transfer equipment, and related aids stored inconveniently, leading to skipped use or an unsafe rush to retrieve them',
+        where:'The bathroom and nearby storage',
+        why:'Equipment that is hard to reach or store is more likely to be left out as a trip hazard, or skipped altogether when it would have improved safety',
+        how:'Designate a specific, close, reachable storage spot for each piece of bathing or transfer equipment, and build putting it away into the daily routine',
+        measurement:'Recognised occupational-therapy guidance recommends storing assistive equipment close to its point of use to encourage consistent, correct use.',
+        example:'A household fits a small wall-mounted rack just inside the bathroom door for the shower bench and grab-bar-mounted accessories.',
+        tip:'If equipment keeps being left out on the floor, that is a sign the designated storage spot is not convenient enough — move it closer to where it is used.' },
+
+      { id:'mb38', num:'MB38', risk:'medium', title:'Bathroom Flooring Provides Safe, Slip-Resistant Traction',
+        who:'Anyone moving through the bathroom, especially when the floor may be wet',
+        what:'Smooth or glossy bathroom flooring that becomes slippery when wet, increasing fall risk during transfers',
+        where:'The bathroom floor, particularly around the shower, bath, and sink',
+        why:'The bathroom combines water exposure with frequent transfers, making flooring traction a significant safety factor',
+        how:'Choose or retrofit slip-resistant flooring rated for wet areas, use securely backed bath mats rather than loose ones, and dry the floor promptly after use',
+        measurement:'Recognised accessible-design guidance recommends slip-resistant flooring with a wet-rated coefficient of friction for bathroom areas — confirm the specific rating with the flooring supplier.',
+        example:'A family replaces smooth bathroom tile with a textured, slip-resistant alternative during a bathroom accessibility renovation.',
+        tip:'Test any new flooring sample with wet feet or wheels before committing to a full installation — showroom conditions do not always reflect real bathroom use.' },
+
+      { id:'mb39', num:'MB39', risk:'low', title:'Mirror and Personal-Care Storage at a Usable Height',
+        who:'Anyone completing personal-care tasks from a seated position',
+        what:'Mirrors and personal-care item storage positioned at standing height only, making everyday grooming tasks difficult',
+        where:'The bathroom and any dressing area',
+        why:'Everyday independence in personal care contributes meaningfully to dignity and confidence, beyond the immediate safety consideration',
+        how:'Install a tilting or lowered mirror, and store frequently used personal-care items within the comfortable reach zone',
+        measurement:'Recognised accessible-design guidance recommends a tilting mirror or one mounted with its lower edge at approximately 1000mm (39in) from the floor for effective seated use.',
+        example:'A household fits an adjustable tilting mirror above the bathroom sink so it can angle down for a seated user.',
+        tip:'A small, well-lit magnifying mirror at counter height is a simple, low-cost addition for close personal-care tasks.' },
+
+      { id:'mb40', num:'MB40', risk:'medium', title:'Accessible Route Between Bedroom and Bathroom Kept Clear',
+        who:'Anyone moving between the bedroom and bathroom, particularly overnight',
+        what:'A cluttered, poorly lit, or overly long route between the bedroom and bathroom that increases risk during a time-pressured or nighttime trip',
+        where:'The hallway or path connecting the bedroom used and the accessible bathroom',
+        why:'Nighttime trips to the bathroom combine reduced alertness and lower light with time pressure, making this route a common site for falls',
+        how:'Keep the route free of furniture, cords, and rugs, add reliable night lighting (including motion-sensor options), and consider bedroom location relative to the bathroom when planning home layout',
+        measurement:'Recognised accessible-design and fall-prevention guidance recommends a clear, well-lit, obstruction-free route between frequently used rooms, with particular attention to overnight routes.',
+        example:'A family relocates the main bedroom to the ground floor next to the accessible bathroom, shortening what had been a longer nighttime route.',
+        tip:'A plug-in or motion-sensor night light along this specific route is a small change that meaningfully reduces nighttime fall risk.' },
+
+      { id:'mb41', num:'MB41', risk:'medium', title:'Kitchen and Bathroom Cupboard Doors Support Safe Wheelchair Access',
+        who:'Anyone opening cupboards and cabinets from a seated position',
+        what:'Cupboard doors that swing into the wheelchair\'s approach space, or handles positioned awkwardly for a seated reach',
+        where:'Kitchen and bathroom cupboards',
+        why:'A door that blocks the approach space forces an awkward manoeuvre every time a cupboard is used, and can catch on the wheelchair',
+        how:'Where possible, choose sliding doors or doors that open fully out of the way, and position handles for a comfortable seated grip',
+        measurement:'Recognised accessible-design guidance recommends cupboard hardware and door swing that does not obstruct the wheelchair\'s approach or turning space.',
+        example:'A household swaps hinged cupboard doors under the sink for a sliding door during a kitchen accessibility update.',
+        tip:'Test each cupboard door with the wheelchair in its actual position of use, not just by opening the door on its own.' },
+
+      { id:'mb42', num:'MB42', risk:'low', title:'Accessible Small-Appliance and Everyday-Task Solutions Considered',
+        who:'Anyone completing small daily tasks such as making a hot drink or using small kitchen appliances',
+        what:'Everyday tasks that are technically possible but consistently difficult or unsafe, discouraging independent use',
+        where:'Wherever small daily kitchen and household tasks are completed',
+        why:'A build-up of small daily frictions can gradually erode confidence and independence, even when no single task poses a major hazard on its own',
+        how:'Review small daily tasks periodically with the person doing them, and introduce a specific adapted appliance or tool (a kettle tipper, a one-handed tin opener) where it removes a genuine, repeated difficulty',
+        measurement:'Recognised occupational-therapy guidance recommends periodic review of daily task difficulty, since small adaptations often meaningfully restore independence.',
+        example:'A household introduces a kettle-tipping stand after noticing pouring boiling water had become an anxious daily task.',
+        tip:'Ask directly which small daily task feels most frustrating or unsafe — the person doing the task usually knows exactly where the friction is.' }
+    ]
+  },
+  {
+    id: 4, name: 'Fire Escape & Emergency Evacuation Planning', icon: '🚪',
+    desc: '14 checks covering a written personal evacuation plan, evacuation chair or buddy-system planning, clear escape routes, smoke alarm placement with visual or vibrating alerts, and backup power.',
+    checks: [
+      { id:'mb43', num:'MB43', risk:'critical', title:'A Written Personal Emergency Evacuation Plan Exists',
+        who:'Every household member with limited mobility, and everyone else in the household',
+        what:'No specific, written plan for how a person with limited mobility will evacuate the home in a fire or other emergency',
+        where:'Every level and exit route of the home',
+        why:'A general household fire plan often does not account for the extra time, equipment, or assistance a person with limited mobility needs, which can cost critical time in an emergency',
+        how:'Create a written, personal evacuation plan covering primary and backup exit routes, who assists and how, and any equipment needed; review and practise it with everyone involved',
+        measurement:'Recognised fire-safety guidance recommends a written personal emergency evacuation plan for anyone who could not evacuate a building unaided, reviewed at least annually or after any change in mobility or home layout.',
+        example:'A family creates a one-page evacuation plan with a simple diagram of the home, kept by the bed and shared with every regular visitor or caregiver.',
+        tip:'Involve the person the plan is for directly in creating it — their own knowledge of what is realistic and manageable is essential.' },
+
+      { id:'mb44', num:'MB44', risk:'critical', title:'Evacuation Chair or Buddy-System Planning for Multi-Storey Homes',
+        who:'Households where the wheelchair user\'s bedroom or main living space is not on the ground floor',
+        what:'No planned method for getting a wheelchair user down stairs safely in an emergency when a lift or stairlift cannot be relied on',
+        where:'Stairwells and upper floors of a multi-storey home',
+        why:'Powered lifts and stairlifts typically cannot be relied on during a fire (due to power loss) — a specific evacuation method is needed for stairs',
+        how:'Arrange and practise a specific evacuation method — an evacuation chair, a trained buddy-carry technique, or a documented "wait in a safe refuge and call for help" plan — matched to the home\'s layout and the household\'s physical capability',
+        measurement:'Recognised fire-safety guidance for multi-storey buildings recommends a specific, practised evacuation method for wheelchair users on upper floors, since lifts should not be used during a fire.',
+        example:'A household with a first-floor bedroom keeps a folding evacuation chair in a dedicated hallway spot and has practised its use with a neighbour who has agreed to assist.',
+        tip:'If a full evacuation chair is not practical, a documented "safe refuge and call for help" plan with a fire-resistant door and phone access is a recognised fallback — confirm with local fire-safety guidance.' },
+
+      { id:'mb45', num:'MB45', risk:'critical', title:'Escape Routes Are Kept Clear and Wide Enough',
+        who:'Everyone in the household',
+        what:'Furniture, boxes, or clutter narrowing an escape route below the width a wheelchair needs to pass through quickly',
+        where:'Hallways, doorways, and the full length of every planned escape route',
+        why:'An escape route that works in daily use may still be too narrow or obstructed for a fast, stressed evacuation — width and clearance need a dedicated check',
+        how:'Measure escape routes against the wheelchair\'s width plus a safety margin, and set a firm household rule against leaving items in these specific routes even temporarily',
+        measurement:'Recognised fire-safety guidance recommends escape routes kept clear at their full width at all times, sized to the widest mobility device that needs to use them.',
+        example:'A household marks the escape route on a simple house diagram and does a monthly walk-through specifically checking it stays clear.',
+        tip:'A route that is "usually" clear is not the same as one that is reliably clear — build the clear-route habit into daily tidying, not just emergency planning.' },
+
+      { id:'mb46', num:'MB46', risk:'high', title:'Smoke Alarms Include Visual or Vibrating Alerts Where Needed',
+        who:'Anyone in the household who is deaf, hard of hearing, or a heavy sleeper who may not wake to a standard audible alarm',
+        what:'Smoke alarms that rely on sound alone, which may not wake or alert someone who cannot hear them',
+        where:'Bedrooms and main living areas, matched to where the household member sleeps or spends most time',
+        why:'A fire alarm that does not reach the person who needs to respond provides a false sense of security',
+        how:'Install smoke alarms with a strobe light and bed-shaker/vibrating pad alert where standard audible alarms are not sufficient, positioned per the manufacturer\'s guidance for the room',
+        measurement:'Recognised fire-safety guidance recommends visual (strobe) and vibrating alert devices as a supplement to audible smoke alarms for anyone who may not reliably wake to sound alone.',
+        example:'A household fits a bed-shaker alarm accessory linked to the main smoke detector system in a bedroom used by a family member who is a very heavy sleeper.',
+        tip:'Test any linked visual or vibrating alert device on the same schedule as the standard smoke alarm — it needs the same regular check.' },
+
+      { id:'mb47', num:'MB47', risk:'critical', title:'Smoke Alarms Are Tested and Maintained Regularly',
+        who:'Every household',
+        what:'Smoke alarms that are not tested regularly, have expired batteries, or are past their recommended replacement date',
+        where:'Every smoke alarm in the home',
+        why:'A smoke alarm is only effective if it actually works when needed — untested alarms are a common and preventable gap',
+        how:'Test every smoke alarm monthly using the test button, replace batteries as recommended by the manufacturer, and replace the whole unit at the end of its rated service life',
+        measurement:'Recognised fire-safety guidance recommends testing smoke alarms at least monthly and replacing units at the end of the manufacturer\'s stated service life, typically around 10 years.',
+        example:'A household tests all smoke alarms on the first Sunday of every month as a fixed household routine.',
+        tip:'Write the alarm\'s installation or expiry date on the unit itself with a marker so it is easy to track replacement timing.' },
+
+      { id:'mb48', num:'MB48', risk:'high', title:'A Clear, Practised Meeting Point Is Established',
+        who:'Every household member and regular visitor or caregiver',
+        what:'No agreed, accessible meeting point outside the home after an evacuation, causing confusion or a delay in confirming everyone is safely out',
+        where:'A fixed outdoor location a safe distance from the home',
+        why:'A clear meeting point lets emergency responders know quickly whether everyone is accounted for, which is especially important when evacuation may take longer for some household members',
+        how:'Agree a specific, accessible outdoor meeting point that a wheelchair user can reach safely, and confirm it is included in the written evacuation plan',
+        measurement:'Recognised fire-safety guidance recommends a fixed, accessible meeting point a safe distance from the building, agreed and practised in advance.',
+        example:'A household sets the accessible driveway end near the mailbox as the fixed meeting point, chosen specifically because it is reachable by wheelchair without crossing uneven ground.',
+        tip:'Choose a meeting point that is genuinely reachable by wheelchair, not just convenient on foot — test it as part of any practice drill.' },
+
+      { id:'mb49', num:'MB49', risk:'medium', title:'Neighbours or Building Management Are Informed of Mobility Needs',
+        who:'The household, and immediate neighbours or building management where relevant',
+        what:'Neighbours or building management unaware that a household member has limited mobility and may need extra assistance or time during an emergency',
+        where:'The immediate neighbourhood or building',
+        why:'A neighbour or building manager who knows in advance can alert emergency responders specifically, or assist directly if safe and appropriate',
+        how:'Share relevant information with trusted neighbours or building management, including which room is usually occupied and any relevant equipment, updating them if circumstances change',
+        measurement:'Recognised fire-safety and community-preparedness guidance recommends informing immediate neighbours or building management of any household member who may need extra evacuation assistance.',
+        example:'A household lets two immediate neighbours know which bedroom window belongs to the wheelchair user, so they can point this out to firefighters if needed.',
+        tip:'Update neighbours or building management whenever a mobility situation changes — the information is only useful if it stays current.' },
+
+      { id:'mb50', num:'MB50', risk:'high', title:'Backup Power Plan for Essential Evacuation-Related Equipment',
+        who:'Anyone relying on powered mobility, communication, or medical equipment that could be needed during an evacuation',
+        what:'No backup power plan for equipment such as a powered wheelchair, stairlift, or communication device if mains power fails during an emergency',
+        where:'Wherever essential powered equipment is used or charged',
+        why:'A power outage during or before an emergency can leave essential equipment unusable exactly when it is needed most',
+        how:'Keep essential equipment charged as a routine habit, know the manual backup or release mechanism for powered equipment (such as manually releasing a stairlift), and consider a backup power source for critical devices',
+        measurement:'Recognised emergency-preparedness guidance recommends keeping essential mobility and medical equipment charged and knowing its manual backup operation, independent of a working power supply.',
+        example:'A household learns and practises the manual release procedure for their stairlift so it can still be moved by hand if the power is out.',
+        tip:'Ask the equipment supplier directly what the manual backup or override procedure is — it is not always obvious from the equipment itself.' },
+
+      { id:'mb51', num:'MB51', risk:'high', title:'Fire Doors and Compartmentation Are Not Compromised',
+        who:'Everyone in the household, particularly relevant in flats or multi-storey buildings',
+        what:'Fire doors propped open, or gaps and damage that reduce a fire door\'s ability to slow fire and smoke spread',
+        where:'Any fire door in the home or building, including flat entrance doors in multi-occupancy buildings',
+        why:'Fire doors buy critical extra time for evacuation or safe refuge, especially important where evacuation may take longer',
+        how:'Keep fire doors closed except when passing through (unless fitted with an approved automatic closer/hold-open device), and report any damage or gaps to a landlord or building management promptly',
+        measurement:'Recognised fire-safety guidance requires fire doors to be kept closed (or held open only by an approved, alarm-linked device) and maintained without gaps, damage, or missing seals.',
+        example:'A resident reports a damaged fire door seal in a shared stairwell to building management the same week it is noticed.',
+        tip:'A fire door propped open with a wedge "just for a moment" is a common and preventable safety gap — build the habit of closing it fully every time.' },
+
+      { id:'mb52', num:'MB52', risk:'medium', title:'Emergency Contact and Medical Information Is Ready to Grab',
+        who:'Everyone in the household, and any assisting emergency responder',
+        what:'No quickly accessible summary of medical needs, equipment, and emergency contacts to bring during an evacuation or hand to responders',
+        where:'Near the primary bedroom or main exit, and included in the emergency kit',
+        why:'Responders arriving during an emergency benefit from immediate, accurate information about mobility needs and any medical conditions, without needing to ask a stressed household member',
+        how:'Keep a brief, current information card with key medical details, equipment notes, and emergency contacts in an easily grabbed spot, and update it whenever anything changes',
+        measurement:'Recognised emergency-preparedness guidance recommends a portable, current medical and mobility-needs summary kept accessible for use during any emergency evacuation.',
+        example:'A household keeps a laminated card with medical and mobility details clipped inside the bedside table drawer, updated after every relevant appointment.',
+        tip:'Keep a duplicate copy of this information on a trusted phone as a backup in case the physical card cannot be grabbed.' },
+
+      { id:'mb53', num:'MB53', risk:'medium', title:'Household Practises the Evacuation Plan Periodically',
+        who:'Everyone named in the written evacuation plan, including regular caregivers',
+        what:'An evacuation plan that exists only on paper and has never been walked through in practice',
+        where:'The whole planned evacuation route, from bedroom to meeting point',
+        why:'A plan that has not been practised often reveals gaps — a door that is harder to open than expected, a route that takes longer than assumed — only during an actual emergency, which is too late',
+        how:'Walk through the evacuation plan at a calm, unhurried pace periodically, timing it and noting anything that did not go as planned',
+        measurement:'Recognised fire-safety guidance recommends practising a personal emergency evacuation plan at least annually, and after any change in mobility, equipment, or home layout.',
+        example:'A household does a calm practice walk-through every few months, timing how long it takes and adjusting the plan when something is slower than expected.',
+        tip:'Practise the plan in different conditions occasionally — for example, at night with just a torch — since a real emergency will not always happen in ideal daytime conditions.' },
+
+      { id:'mb54', num:'MB54', risk:'low', title:'A Fire Extinguisher and Blanket Are Accessible, Not Just Present',
+        who:'Anyone in the household who may need to respond to a very small, contained fire before evacuating',
+        what:'A fire extinguisher or fire blanket present in the home but stored somewhere a wheelchair user cannot reach or operate independently',
+        where:'The kitchen and any other area with fire-safety equipment',
+        why:'Fire-safety equipment is only useful if it can genuinely be reached and used by the people in the home — evacuation always takes priority over fighting a fire, but reachable equipment supports the immediate seconds after noticing a small fire',
+        how:'Position extinguishers and fire blankets within confirmed seated reach, and know that the household\'s clear priority is always evacuation over attempting to fight a fire beyond a very small, contained one',
+        measurement:'Recognised fire-safety guidance recommends fire extinguishers only for very small, contained fires, positioned within easy reach, with evacuation as the priority in any larger or spreading fire.',
+        example:'A household mounts a small kitchen fire blanket at a lower, seated-reachable height during an accessibility review.',
+        tip:'Everyone in the household should know that leaving is always the right choice over attempting to fight a fire that is not small and fully contained.' },
+
+      { id:'mb55', num:'MB55', risk:'medium', title:'Multi-Storey Equipment (Stairlift, Platform Lift) Has a Documented Manual Override',
+        who:'Households using a stairlift or platform lift as part of daily or evacuation mobility',
+        what:'No documented, practised way to move the lift manually if power fails, particularly relevant during an evacuation',
+        where:'The stairlift or platform lift and its power source',
+        why:'Powered lifts generally should not be used during a fire, but understanding a documented manual override supports the household\'s overall evacuation and safe-refuge planning',
+        how:'Request and keep the manufacturer\'s manual-override instructions, and confirm with a fire-safety professional how this equipment fits into the household\'s overall evacuation plan',
+        measurement:'Recognised fire-safety guidance treats powered lifts as unsuitable for use during a fire evacuation, and recommends the manual override be documented purely for maintenance and non-emergency power-failure situations.',
+        example:'A household files the stairlift manufacturer\'s manual-override guide alongside its other equipment documentation for quick reference.',
+        tip:'Confirm directly with a fire-safety professional how a stairlift or platform lift fits into (or is excluded from) the household\'s evacuation plan — do not assume.' },
+
+      { id:'mb56', num:'MB56', risk:'low', title:'Local Emergency Services Are Aware of Household Mobility Needs Where Relevant',
+        who:'The household, where local registration or notification schemes exist',
+        what:'Emergency services unaware in advance that a household includes a person with limited mobility who may need extra assistance',
+        where:'Wherever local emergency-service notification or vulnerability-registration options exist',
+        why:'Advance awareness can help emergency responders prioritise or plan their approach appropriately during a call-out',
+        how:'Where a local voluntary notification or registration option exists with the fire or emergency service, consider registering and keeping the information updated',
+        measurement:'Recognised fire-safety guidance in many areas offers a voluntary vulnerability-notification option — availability and process vary, so confirm what applies locally.',
+        example:'A household looks into the local fire service\'s home safety visit and notification options, and registers the details relevant to their situation.',
+        tip:'Update any registration promptly whenever mobility needs or home layout change — an outdated registration can be misleading rather than helpful.' }
+    ]
+  },
+  {
+    id: 5, name: 'Home Modifications & Assistive Technology', icon: '🏠',
+    desc: '14 checks covering stairlifts and platform lifts, smart-home and voice-control adaptations, widened doorways, safe flooring, charged assistive devices, and professional occupational-therapy assessment.',
+    checks: [
+      { id:'mb57', num:'MB57', risk:'high', title:'Stairlifts and Platform Lifts Are Correctly Fitted and Maintained',
+        who:'Anyone using a stairlift or platform lift for daily mobility between floors',
+        what:'A stairlift or platform lift that is not serviced regularly, or was not professionally fitted and assessed for the specific home and user',
+        where:'The stairwell or the platform lift location',
+        why:'A stairlift or lift is a piece of safety-critical equipment — a fault or incorrect fitting directly risks a fall',
+        how:'Have stairlifts and platform lifts professionally installed and assessed for the specific staircase and user, and serviced on the schedule recommended by the manufacturer or installer',
+        measurement:'Recognised mobility-equipment guidance recommends professional installation and servicing of stairlifts and platform lifts at least annually, or as specified by the manufacturer.',
+        example:'A household books an annual service for their stairlift and keeps the service record with other home-safety documentation.',
+        tip:'Report any unusual noise, jerking motion, or slower-than-normal operation immediately rather than waiting for the next scheduled service.' },
+
+      { id:'mb58', num:'MB58', risk:'medium', title:'Smart-Home and Voice-Control Adaptations Support Independence',
+        who:'Anyone who benefits from voice or app-based control of lighting, heating, entry, or other home functions',
+        what:'Home systems that require physical operation only, missing an opportunity to restore independence through smart-home or voice control',
+        where:'Lighting, heating, door entry, and other controllable home systems',
+        why:'Smart-home adaptations can restore a meaningful degree of independence for tasks that would otherwise require physically reaching a switch or waiting for help',
+        how:'Introduce voice-controlled or app-based control for lighting, heating, and entry systems where it genuinely reduces a repeated difficulty, choosing reliable, well-supported products',
+        measurement:'Recognised occupational-therapy and assistive-technology guidance recommends matching smart-home adaptations to specific, identified daily difficulties rather than installing technology for its own sake.',
+        example:'A household adds a voice-controlled smart plug for a lamp that was previously reachable only by standing, restoring independent control from the wheelchair.',
+        tip:'Keep a simple backup (a reachable manual switch) alongside any smart-home control in case of a technology or connectivity failure.' },
+
+      { id:'mb59', num:'MB59', risk:'high', title:'Widened Doorways and Lowered Switches Completed to a Recognised Standard',
+        who:'The wheelchair user and anyone assisting with home modification decisions',
+        what:'Doorway widening or switch-lowering work carried out without reference to recognised accessible-design dimensions, resulting in modifications that still do not work well in practice',
+        where:'Any doorway, switch, or fitting altered as part of a home modification',
+        why:'Modifications that are close to, but not quite, an effective accessible dimension can waste money and still leave a genuine daily obstacle',
+        how:'Plan modifications with reference to recognised accessible-design guidance and, wherever the modification is significant, involve an occupational therapist or qualified accessibility professional in the specification',
+        measurement:'Recognised accessible-design guidance (general principles consistent with ISO 21542) provides reference dimensions for doorway widths, switch heights, and similar fittings — confirm specific figures for the modification being planned.',
+        example:'A family commissions an occupational-therapy home assessment before a doorway-widening project, ensuring the finished opening genuinely suits the wheelchair used.',
+        tip:'Get modification dimensions confirmed in writing against the specific wheelchair or mobility device used, not a generic standard chair size.' },
+
+      { id:'mb60', num:'MB60', risk:'medium', title:'Flooring Choices Support Safe Rolling and Walking',
+        who:'Anyone using a wheelchair or walking aid throughout the home',
+        what:'Flooring that is too soft, too high-pile, or has transition strips that catch wheels, making rolling difficult or unstable',
+        where:'Throughout the home, particularly at transitions between rooms with different flooring',
+        why:'The right flooring reduces the physical effort of self-propelling and lowers the risk of a wheel catching or a walking aid slipping',
+        how:'Choose firm, low-pile, or hard flooring for main routes, and use low-profile transition strips between different flooring types rather than raised ones',
+        measurement:'Recognised accessible-design guidance recommends firm flooring surfaces for wheelchair routes, avoiding deep-pile carpet and any transition strip higher than a small bevelled edge.',
+        example:'A household replaces a thick-pile hallway rug with a low-profile, firm alternative after noticing it made self-propelling noticeably harder.',
+        tip:'Test any new flooring sample with the actual wheelchair before committing to a full-room installation.' },
+
+      { id:'mb61', num:'MB61', risk:'medium', title:'Assistive Devices Are Kept Charged and Within Reach',
+        who:'Anyone relying on assistive devices such as communication aids, powered equipment, or mobility accessories',
+        what:'Assistive devices left uncharged or stored somewhere inconvenient, leading to inconsistent use exactly when they are needed',
+        where:'Wherever assistive devices are used and stored',
+        why:'A device that is not charged or not within reach when needed effectively fails at the moment it matters most',
+        how:'Build charging and storage of assistive devices into a daily household routine, with a consistent, reachable location for each device',
+        measurement:'Recognised assistive-technology guidance recommends a consistent daily charging and storage routine as part of reliable device use, rather than charging only when a device is noticed to be low.',
+        example:'A household sets a nightly routine of returning and charging all assistive devices in the same labelled spot near the bed.',
+        tip:'A simple checklist by the charging spot ("device charged? in its spot?") helps build the habit quickly for a new device.' },
+
+      { id:'mb62', num:'MB62', risk:'critical', title:'A Professional Occupational-Therapy Assessment Guides Major Modifications',
+        who:'Any household planning a significant home modification for accessibility',
+        what:'Major modifications (bathroom conversions, stairlifts, doorway widening, ramp installation) planned without professional assessment, risking a costly result that does not actually meet the person\'s needs',
+        where:'The whole home, for any significant modification project',
+        why:'An occupational therapist or qualified accessibility professional can identify the specific needs, techniques, and dimensions relevant to the individual, which general guidance alone cannot fully capture',
+        how:'Arrange a professional occupational-therapy or accessibility assessment before committing to any major modification, and use the resulting recommendations as the specification for the work',
+        measurement:'Recognised occupational-therapy guidance identifies a professional home assessment as the standard first step before major accessibility modifications, rather than proceeding on general guidance alone.',
+        example:'A family arranges an occupational-therapy home visit before starting a bathroom renovation, and the resulting report becomes the brief given to the building contractor.',
+        tip:'Keep the occupational therapist\'s written report and recommendations on file — it is a useful reference for future modifications and for any funding or planning applications.' },
+
+      { id:'mb63', num:'MB63', risk:'medium', title:'Funding and Planning Considerations Are Understood Before Major Work Begins',
+        who:'Any household planning a funded or significant accessibility modification',
+        what:'Major modification work started before understanding available support, required approvals, or realistic timelines, leading to delays or unexpected cost',
+        where:'Wherever modification planning and paperwork happen',
+        why:'Understanding funding and planning requirements in advance avoids starting work that later has to be redone or paused',
+        how:'Research relevant funding or assistance options and any required approvals before committing to significant modification work, and build realistic timelines into planning',
+        measurement:'General accessibility-planning guidance recommends confirming funding, approvals, and realistic timelines before major home-modification work begins, rather than during the project.',
+        example:'A household completes the occupational-therapy assessment and funding enquiry stages before finalising the scope of a bathroom modification project.',
+        tip:'Ask the occupational therapist or accessibility professional directly what funding or assistance options are typically relevant — they often know the practical starting points.' },
+
+      { id:'mb64', num:'MB64', risk:'medium', title:'Home Modifications Are Reviewed as Needs Change Over Time',
+        who:'Every household with existing accessibility modifications',
+        what:'Modifications made years ago that no longer suit a person\'s current needs, ability, or equipment',
+        where:'Every modified area of the home',
+        why:'Mobility needs can change over time, and a modification that worked well previously may need adjustment to remain safe and effective',
+        how:'Periodically review existing modifications against current needs, particularly after any change in equipment, ability, or a new occupational-therapy assessment',
+        measurement:'Recognised occupational-therapy guidance recommends reviewing home modifications after any significant change in mobility, equipment, or living situation, rather than treating them as permanently fixed.',
+        example:'A family schedules a modification review alongside a routine occupational-therapy check-in, catching that a grab bar position no longer suits a new transfer technique.',
+        tip:'Treat a modification review as a normal, positive part of ongoing care planning, not a sign that something went wrong the first time.' },
+
+      { id:'mb65', num:'MB65', risk:'low', title:'Assistive Technology for Communication Is Available Where Needed',
+        who:'Anyone in the household with communication needs related to their mobility condition',
+        what:'No plan for how someone will communicate a need for help if voice alone is difficult in a specific situation, such as a fall or an equipment failure',
+        where:'Throughout the home, particularly bedrooms and bathrooms',
+        why:'The ability to summon help reliably is a core safety function, particularly for someone alone for periods of the day',
+        how:'Consider a personal alarm, pendant alert, or app-based alert system suited to the individual\'s needs, and keep it charged, worn, or within reach consistently',
+        measurement:'Recognised assistive-technology guidance recommends a reliable alert or communication method available in every room where the person may spend time alone, particularly the bathroom and bedroom.',
+        example:'A household sets up a wearable personal alarm pendant, worn daily, that a household member can press to alert a designated contact.',
+        tip:'Test any alert or alarm system periodically to confirm it still reaches the intended contact reliably.' },
+
+      { id:'mb66', num:'MB66', risk:'medium', title:'Outdoor and Garden Areas Include Accessible Adaptations Where Used',
+        who:'Anyone who spends time in the garden or outdoor areas of the home',
+        what:'Outdoor spaces that are enjoyed by the household but not adapted for safe, independent wheelchair access',
+        where:'Garden, patio, and any outdoor living space',
+        why:'Access to outdoor space contributes meaningfully to quality of life and should be planned for, not treated as an afterthought',
+        how:'Apply the same accessible-design principles used indoors (firm surfaces, adequate width, gentle gradients) to key outdoor areas the household actually uses',
+        measurement:'Recognised accessible-design guidance recommends extending accessible-route principles (surface, width, gradient) to outdoor living spaces intended for regular use.',
+        example:'A family adds a firm, level patio area with a gentle-gradient path from the accessible entrance, specifically so garden time remains part of daily life.',
+        tip:'Involve the person directly in choosing which outdoor space matters most to adapt first — priorities are personal, not generic.' },
+
+      { id:'mb67', num:'MB67', risk:'low', title:'Adaptive Equipment for Hobbies and Interests Is Considered',
+        who:'Anyone whose hobbies or interests have become harder to pursue due to limited mobility',
+        what:'Assumption that certain hobbies or interests are simply no longer possible, without exploring adaptive equipment or techniques that could restore access',
+        where:'Wherever the hobby or interest is normally pursued',
+        why:'Maintaining meaningful activity and interests is a genuine part of wellbeing and independence, not a lower priority than physical safety alone',
+        how:'Research adaptive equipment or modified techniques relevant to the specific hobby, and connect with peer or community groups who often have practical, tested suggestions',
+        measurement:'Recognised occupational-therapy guidance treats meaningful activity and leisure participation as a legitimate, supported goal, not an optional extra beyond core safety needs.',
+        example:'A household member who enjoyed gardening switches to raised, wheelchair-height planter beds rather than giving up the hobby.',
+        tip:'Ask an occupational therapist or a relevant peer support group specifically about adaptive equipment for a particular hobby — solutions often already exist.' },
+
+      { id:'mb68', num:'MB68', risk:'medium', title:'A Realistic Equipment Replacement and Upgrade Plan Exists',
+        who:'Every household relying on mobility equipment with a limited service life',
+        what:'No plan or budget for replacing wheelchairs, cushions, or other equipment as it reaches the end of its safe, effective service life',
+        where:'Wherever equipment planning and paperwork are kept',
+        why:'Equipment that has been quietly used well past its recommended service life may no longer provide the support or safety it once did',
+        how:'Note the expected service life of key equipment, plan realistically for replacement timing and cost, and review equipment condition at the same time as any professional assessment',
+        measurement:'Recognised mobility-equipment guidance provides typical service-life expectations for wheelchairs, cushions, and related equipment, varying by product — confirm specific figures with the supplier.',
+        example:'A household keeps a simple equipment log noting purchase dates and expected service life for the wheelchair, cushion, and shower chair.',
+        tip:'Review equipment condition honestly at each professional check-in — it is easy to keep using worn equipment simply because replacing it feels disruptive.' },
+
+      { id:'mb69', num:'MB69', risk:'low', title:'Home Layout Supports Efficient, Low-Effort Daily Routines',
+        who:'Everyone in the household, particularly the wheelchair user',
+        what:'A home layout that technically works but requires unnecessarily long or effortful routes for frequent daily tasks',
+        where:'Throughout the home, considering the most frequently repeated daily routes',
+        why:'Reducing unnecessary daily physical effort supports both energy conservation and joint protection over the long term',
+        how:'Review the most frequent daily routes (bedroom to bathroom, kitchen to dining area) and consider whether furniture or room-use changes could shorten or simplify them',
+        measurement:'Recognised occupational-therapy guidance for energy conservation recommends reviewing and simplifying the most frequently repeated daily routes and tasks.',
+        example:'A household relocates frequently used items from a rarely visited room into the main living area to cut down on repeated trips.',
+        tip:'Track which daily routes are used most often for a week, then focus modification effort on those first — they offer the biggest everyday benefit.' },
+
+      { id:'mb70', num:'MB70', risk:'low', title:'Technology and Equipment Manuals Are Kept Together and Accessible',
+        who:'Every household with assistive technology or mobility equipment',
+        what:'Equipment manuals, warranty information, and service records scattered or missing, making troubleshooting or servicing slower and harder',
+        where:'Wherever household paperwork and documentation is kept',
+        why:'Quick access to manuals and service history speeds up troubleshooting and makes professional servicing more efficient',
+        how:'Keep manuals, warranty details, and service records for all mobility and assistive equipment together in one folder or digital file, updated as equipment changes',
+        measurement:'General household-organisation and mobility-equipment guidance recommends keeping documentation for safety-critical equipment together and accessible.',
+        example:'A household keeps a single folder labelled "Mobility Equipment" with manuals and service records for the wheelchair, stairlift, and hoist.',
+        tip:'Photograph or scan key manuals and service records as a backup, in case the physical folder is ever misplaced.' }
+    ]
+  },
+  {
+    id: 6, name: 'Community, Independence & Caregiver Support', icon: '🤝',
+    desc: '14 checks covering accessible transport planning, maintaining community connection, workplace or education accessibility, safe caregiver lifting technique, respecting autonomy, and peer support.',
+    checks: [
+      { id:'mb71', num:'MB71', risk:'medium', title:'Accessible Transport Options Are Identified and Planned',
+        who:'Anyone travelling outside the home for appointments, work, education, or social activities',
+        what:'No reliable, planned way to travel outside the home, leading to missed appointments or reduced participation',
+        where:'Wherever transport is arranged or booked',
+        why:'Reliable transport is fundamental to maintaining appointments, work, education, and social connection outside the home',
+        how:'Identify and confirm accessible transport options in advance (accessible taxi services, community transport, a wheelchair-accessible vehicle), and keep booking details and contact numbers handy',
+        measurement:'Recognised accessible-transport planning guidance recommends confirming accessible transport options and any required advance booking windows before they are urgently needed.',
+        example:'A household keeps a list of two or three accessible transport providers, with booking notes on how far in advance each typically needs to be arranged.',
+        tip:'Book known regular appointments as far in advance as the transport provider allows — accessible vehicle availability is often more limited than standard transport.' },
+
+      { id:'mb72', num:'MB72', risk:'low', title:'Community and Social Participation Is Actively Maintained',
+        who:'The wheelchair user and household',
+        what:'Reduced social participation over time, sometimes due to accumulated small barriers rather than any single decision to withdraw',
+        where:'Community groups, social activities, places of worship, and friendships',
+        why:'Maintaining social connection is a genuine and significant contributor to wellbeing, and reduced participation can happen gradually and go unnoticed',
+        how:'Proactively identify and maintain regular social and community activities, addressing specific access barriers as they arise rather than letting them accumulate',
+        measurement:'Recognised wellbeing and rehabilitation guidance identifies maintained social participation as a meaningful, supported goal alongside physical safety.',
+        example:'A household member continues a weekly community group by arranging transport and confirming accessible venue details in advance each time.',
+        tip:'If participation in something valued has quietly dropped off, ask directly what specific barrier caused it — it is often a solvable, practical issue.' },
+
+      { id:'mb73', num:'MB73', risk:'medium', title:'Workplace or Education Accessibility Conversations Happen Proactively',
+        who:'Anyone attending work, study, or training outside the home',
+        what:'Accessibility needs at work or in education addressed reactively, after a problem occurs, rather than planned for in advance',
+        where:'The workplace, school, college, or training venue',
+        why:'Proactive conversations about accessibility needs generally lead to better, less rushed solutions than addressing a problem after it has already caused disruption',
+        how:'Initiate a direct conversation with the relevant workplace, school, or education provider about specific accessibility needs, ideally before starting or well ahead of a known challenge',
+        measurement:'Recognised occupational and educational accessibility guidance recommends proactive disclosure and planning conversations rather than waiting for a barrier to occur.',
+        example:'A household member starting a new course contacts the accessibility office in advance to confirm room accessibility and any needed adjustments.',
+        tip:'Put accessibility requests in writing (even a simple email) so there is a clear, dated record of what was agreed.' },
+
+      { id:'mb74', num:'MB74', risk:'critical', title:'Caregivers Use Safe Lifting and Handling Technique',
+        who:'Any caregiver assisting with transfers, lifting, or physical support',
+        what:'Caregivers lifting or supporting with poor technique, risking their own back, shoulder, or joint injury over repeated assists',
+        where:'Anywhere a caregiver physically assists with transfers or movement',
+        why:'Caregiver back injury is one of the most common and preventable injuries in home care settings, and a caregiver injury can also compromise the safety of the person being assisted',
+        how:'Learn and use recognised safe manual-handling technique (bend at the knees, keep the load close, avoid twisting), use assistive equipment rather than manual lifting wherever possible, and get professional manual-handling training',
+        measurement:'Recognised occupational-health and manual-handling guidance recommends formal training in safe handling technique for anyone providing regular physical assistance, and recommends assistive equipment over manual lifting wherever feasible.',
+        example:'A family caregiver completes a manual-handling training session offered through a local health service before taking on regular transfer support.',
+        tip:'If a transfer or lift is starting to feel physically hard on the caregiver, that is a signal to review equipment or technique — caregiver safety matters as much as the person being assisted.' },
+
+      { id:'mb75', num:'MB75', risk:'high', title:'Caregiver Physical Health Is Actively Monitored',
+        who:'Any regular caregiver providing physical assistance',
+        what:'A caregiver\'s own aches, strains, or developing injury dismissed or ignored because attention is focused on the person being cared for',
+        where:'Wherever physical caregiving happens',
+        why:'An injured caregiver cannot safely continue providing assistance, which puts both people at risk — caregiver health is a household safety issue, not a separate concern',
+        how:'Treat new or worsening caregiver pain as worth addressing promptly, including seeking their own physiotherapy or medical review, and reviewing equipment or technique if strain is recurring',
+        measurement:'Recognised occupational-health guidance for caregivers recommends prompt review of any new musculoskeletal pain rather than continuing to work through it.',
+        example:'A caregiver experiencing recurring lower-back discomfort arranges their own physiotherapy assessment and adjusts transfer technique on their recommendation.',
+        tip:'Build a caregiver\'s own physical check-ins into the household\'s overall health routine, not as an afterthought.' },
+
+      { id:'mb76', num:'MB76', risk:'medium', title:'Respite and Backup Caregiver Support Is Arranged',
+        who:'The primary caregiver and household',
+        what:'No backup plan if the primary caregiver is unwell, needs rest, or is unavailable',
+        where:'Wherever caregiving responsibilities are usually provided',
+        why:'A caregiver without any break or backup is at higher risk of burnout, and the household has no safety net if the primary caregiver becomes unavailable',
+        how:'Identify and arrange backup caregiving support in advance — a trained family member, a respite care service, or a rota with other trusted people — rather than waiting until it is urgently needed',
+        measurement:'Recognised caregiver-support guidance recommends identifying respite and backup care options proactively, since arranging them under time pressure is significantly harder.',
+        example:'A household arranges a trusted family member to cover caregiving duties one weekend a month, agreed and scheduled well in advance.',
+        tip:'Introduce a backup caregiver to the household\'s routines and evacuation plan before they are needed, not for the first time during an emergency.' },
+
+      { id:'mb77', num:'MB77', risk:'medium', title:'The Person\'s Autonomy and Decision-Making Are Respected',
+        who:'Everyone in the household, particularly caregivers making day-to-day decisions',
+        what:'Decisions made for the wheelchair user out of habit or convenience, rather than involving them directly in choices that affect their own daily life',
+        where:'Throughout daily household life and decision-making',
+        why:'Respecting autonomy and independence is a core part of dignified, effective care, and directly supports the person\'s own confidence and wellbeing',
+        how:'Involve the person directly in decisions about their own routines, equipment, and modifications, and default to supporting their choices rather than making decisions on their behalf without discussion',
+        measurement:'Recognised person-centred care guidance identifies respecting individual autonomy and involvement in decision-making as a core principle, not an optional extra.',
+        example:'A family checks in directly with the household member before making a home modification decision, rather than assuming what they would prefer.',
+        tip:'Ask "what would help you" rather than assuming — the answer is often different from what a caregiver might guess.' },
+
+      { id:'mb78', num:'MB78', risk:'low', title:'Peer Support and Community Resources Are Known and Used',
+        who:'The wheelchair user and household',
+        what:'Limited awareness of peer support groups, community organisations, or practical resources that other households in similar situations have found valuable',
+        where:'Community organisations, online groups, and local support networks',
+        why:'Peer support often provides practical, tested advice that general guidance cannot, along with genuine social connection with others who understand the daily reality',
+        how:'Research and connect with relevant peer support groups or community organisations, in person or online, and keep contact details handy',
+        measurement:'Recognised rehabilitation and wellbeing guidance identifies peer support as a valuable, evidence-informed complement to professional care and general guidance.',
+        example:'A household member joins a local wheelchair-user peer support group and finds several practical equipment tips that were not covered elsewhere.',
+        tip:'Ask an occupational therapist or accessibility professional for peer group recommendations — they often know which local groups are active and well-regarded.' },
+
+      { id:'mb79', num:'MB79', risk:'medium', title:'Financial and Practical Planning Reduces Day-to-Day Stress',
+        who:'The household managing ongoing costs and logistics related to mobility needs',
+        what:'Ongoing costs and logistics (equipment, transport, care support) managed reactively rather than planned for, adding avoidable stress',
+        where:'Wherever household financial and logistics planning happens',
+        why:'Reducing avoidable financial and logistical stress supports better decision-making and reduces strain on both the person and their caregivers',
+        how:'Build a realistic, ongoing budget and plan for recurring mobility-related costs and logistics, reviewing it periodically rather than only when a cost arises unexpectedly',
+        measurement:'General household-planning guidance recommends proactive budgeting for recurring accessibility-related costs, reviewed at regular intervals.',
+        example:'A household keeps a simple annual budget line for expected equipment servicing, transport, and care-support costs, reviewed each year.',
+        tip:'Ask an occupational therapist or relevant support organisation what typical ongoing costs to plan for — they often have practical, realistic figures.' },
+
+      { id:'mb80', num:'MB80', risk:'low', title:'Sibling and Family Member Understanding Is Supported',
+        who:'Other family members, including siblings or children in the household',
+        what:'Other family members left without a clear, age-appropriate understanding of the household member\'s mobility needs and how to help appropriately',
+        where:'Throughout household life and communication',
+        why:'A clear, honest, age-appropriate understanding helps other family members feel confident and included, rather than confused or anxious about what they should or should not do',
+        how:'Talk openly with other family members, including children, about mobility needs in simple, honest, age-appropriate terms, and involve them in small, appropriate ways they can help',
+        measurement:'Recognised family-support guidance recommends clear, age-appropriate communication with children and other family members about a household member\'s support needs.',
+        example:'Parents explain to younger siblings, in simple terms, why certain equipment needs to stay in specific places and how they can help safely.',
+        tip:'Give other family members a specific, appropriate way to help — feeling genuinely useful supports their own sense of confidence and connection.' },
+
+      { id:'mb81', num:'MB81', risk:'medium', title:'Confidence-Building Activities Are Part of the Routine',
+        who:'The wheelchair user',
+        what:'A routine focused only on managing tasks and risks, without deliberate attention to building confidence, skill, and independence over time',
+        where:'Throughout daily life and any structured therapy or activity sessions',
+        why:'Confidence and skill-building meaningfully support long-term independence and safety, beyond simply managing the physical environment',
+        how:'Work with an occupational therapist or physiotherapist to include confidence-building goals alongside safety measures, celebrating and building on progress',
+        measurement:'Recognised rehabilitation guidance identifies confidence and skill-building as a legitimate, supported goal within an overall care and safety plan.',
+        example:'A household member works with a physiotherapist on progressively more independent transfers, building confidence step by step over several months.',
+        tip:'Notice and acknowledge small independence wins specifically — they build real momentum over time.' },
+
+      { id:'mb82', num:'MB82', risk:'low', title:'Household Emergency Kit Includes Mobility-Specific Items',
+        who:'The whole household',
+        what:'A general household emergency kit that does not account for mobility-specific needs such as spare equipment parts, medication, or communication aids',
+        where:'Wherever the household emergency kit is stored',
+        why:'A general emergency kit alone may miss items that are specifically essential for a person with limited mobility during an extended emergency',
+        how:'Review the household emergency kit specifically for mobility-related needs — spare wheelchair parts, extra charging cables, any essential medication, and communication aids — and check it periodically',
+        measurement:'Recognised emergency-preparedness guidance recommends tailoring a general emergency kit to any household member\'s specific mobility, medical, or communication needs.',
+        example:'A household adds a spare wheelchair inner tube, a portable charger, and a written communication aid to their general emergency kit.',
+        tip:'Review the mobility-specific contents of the emergency kit at the same time as the general kit check, so nothing is missed.' },
+
+      { id:'mb83', num:'MB83', risk:'medium', title:'The Household Reviews and Updates This Checklist as Circumstances Change',
+        who:'The whole household',
+        what:'A safety setup that was right at one point but has not been revisited as equipment, ability, or the home itself has changed',
+        where:'The whole home and every check in this checklist',
+        why:'Mobility needs, equipment, and home circumstances can all change over time, and a safety setup needs to change with them to stay genuinely effective',
+        how:'Revisit this checklist periodically, and specifically after any change in equipment, mobility, home layout, or caregiving arrangements',
+        measurement:'General safety-management guidance recommends reviewing a household safety plan after any significant change, and at a set periodic interval regardless.',
+        example:'A household reviews this checklist every few months and specifically after receiving new equipment or completing a home modification.',
+        tip:'Set a simple recurring reminder to revisit the checklist, rather than relying on remembering to do it.' },
+
+      { id:'mb84', num:'MB84', risk:'low', title:'Independence and Quality of Life Remain the Guiding Goal',
+        who:'The whole household',
+        what:'Safety measures that, taken together, could unintentionally reduce independence or quality of life if applied without balance',
+        where:'The whole home and every safety decision made within it',
+        why:'The purpose of every check in this module is to support a safe, capable, independent daily life — not to create a restrictive or overly cautious environment',
+        how:'When making any safety decision, weigh it against its effect on independence and quality of life, and favour the option that supports both safety and genuine autonomy wherever possible',
+        measurement:'Recognised person-centred care and rehabilitation guidance treats independence and quality of life as core, ongoing goals alongside physical safety, not secondary considerations.',
+        example:'A household chooses a modification that supports independent use over one that is technically safer but would require assistance for every use.',
+        tip:'When two safety options are both reasonable, choose the one that keeps the most independence and dignity intact.' }
+    ]
+  }
+];
+
+const STORE_KEY = 'safelife-mobility-pro';
+const completed = new Set();
+let lang = 'en', theme = 'mobility', mode = 'light', riskFilter = null, activeZone = 1;
+const TOTAL = 84;
+
+function t(key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
+function persist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({completed:[...completed], lang, theme, mode})); }catch(e){}
+}
+function restore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    (d.completed||[]).forEach(id=>completed.add(id));
+    if(false && d.lang && I18N[d.lang]) lang = d.lang; /* language switching disabled for English-only release — remove "false &&" to re-enable */
+    if(d.theme) theme = d.theme;
+    if(d.mode) mode = d.mode;
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════
+// PROGRESS & STATS
+// ═══════════════════════════════════════════
+function updateProgress(){
+  const done = completed.size;
+  document.getElementById('topbar-done').textContent = done;
+  document.getElementById('progress-count').textContent = done + ' ' + t('ofWord') + ' ' + TOTAL;
+  document.getElementById('progress-fill').style.width = (done/TOTAL*100) + '%';
+  ZONES.forEach(z=>{
+    const zDone = z.checks.filter(c=>completed.has(c.id)).length;
+    document.getElementById('ztc-'+z.id).textContent = zDone + '/14';
+  });
+  document.getElementById('celebrate').classList.toggle('show', done === TOTAL);
+  persist();
+}
+function fillStats(){
+  const counts = {critical:0,high:0,medium:0,low:0};
+  ZONES.forEach(z=>z.checks.forEach(c=>counts[c.risk]++));
+  ['critical','high','medium','low'].forEach(r=>{ document.getElementById('s-'+r).textContent = counts[r]; });
+}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function buildCard(check){
+  const card = document.createElement('div');
+  card.className = 'check-card' + (completed.has(check.id) ? ' completed' : '');
+  card.dataset.id = check.id;
+  card.dataset.risk = check.risk;
+  card.innerHTML =
+    '<div class="check-header">' +
+      '<div class="check-checkbox">' + (completed.has(check.id) ? '✓' : '') + '</div>' +
+      '<div class="check-num">' + check.num + '</div>' +
+      '<div class="check-risk risk-' + check.risk + '">' + t(check.risk) + '</div>' +
+      '<div class="check-title">' + check.title + '</div>' +
+      '<div class="check-chevron">▼</div>' +
+    '</div>' +
+    '<div class="check-detail">' +
+      '<div class="detail-grid">' +
+        '<div class="detail-item"><div class="detail-label"><span>👤</span>' + t('who') + '</div><div class="detail-value">' + check.who + '</div></div>' +
+        '<div class="detail-item"><div class="detail-label"><span>⚠️</span>' + t('what') + '</div><div class="detail-value">' + check.what + '</div></div>' +
+        '<div class="detail-item"><div class="detail-label"><span>📍</span>' + t('where') + '</div><div class="detail-value">' + check.where + '</div></div>' +
+        '<div class="detail-item"><div class="detail-label"><span>❓</span>' + t('why') + '</div><div class="detail-value">' + check.why + '</div></div>' +
+        '<div class="detail-item full"><div class="detail-label"><span>🔧</span>' + t('how') + '</div><div class="detail-value">' + check.how + '</div></div>' +
+      '</div>' +
+      '<div class="measurement-box"><strong>📏 ' + t('standards') + '</strong>' + check.measurement + '</div>' +
+      '<div class="detail-item full" style="margin-top:10px;"><div class="detail-label"><span>💬</span>' + t('example') + '</div><div class="detail-value">' + check.example + '</div></div>' +
+      '<div class="tip-box"><span class="tip-icon">💡</span><span class="tip-text"><strong>' + t('quickTip') + ':</strong> ' + check.tip + '</span></div>' +
+    '</div>';
+  card.querySelector('.check-header').addEventListener('click', function(){ card.classList.toggle('open'); });
+  card.querySelector('.check-checkbox').addEventListener('click', function(e){
+    e.stopPropagation();
+    if(completed.has(check.id)){ completed.delete(check.id); card.classList.remove('completed'); this.textContent=''; }
+    else { completed.add(check.id); card.classList.add('completed'); this.textContent='✓'; }
+    updateProgress();
+  });
+  return card;
+}
+
+function renderAll(){
+  document.querySelectorAll('.zone-panel').forEach(p=>p.remove());
+  const main = document.getElementById('main-content');
+  ZONES.forEach(z=>{
+    const panel = document.createElement('div');
+    panel.className = 'zone-panel' + (z.id === activeZone ? ' active' : '');
+    panel.id = 'zone-panel-' + z.id;
+    const header = document.createElement('div');
+    header.className = 'zone-header';
+    header.innerHTML = '<div class="zone-icon">' + (ICONS['z'+z.id] || z.icon) + '</div><div class="zone-header-text"><h2>' + t('z'+z.id) + '</h2><p>' + t('zd'+z.id) + '</p></div>';
+    panel.appendChild(header);
+    const actions = document.createElement('div');
+    actions.className = 'zone-actions';
+    const bExpand = document.createElement('button'); bExpand.className='btn btn-outline'; bExpand.textContent=t('expandAll');
+    const bCollapse = document.createElement('button'); bCollapse.className='btn btn-outline'; bCollapse.textContent=t('collapseAll');
+    const bUnmark = document.createElement('button'); bUnmark.className='btn btn-outline'; bUnmark.textContent=t('unmarkAll');
+    const bMark = document.createElement('button'); bMark.className='btn btn-primary'; bMark.textContent=t('markAll');
+    actions.append(bExpand,bCollapse,bUnmark,bMark);
+    panel.appendChild(actions);
+    const list = document.createElement('div');
+    list.className = 'checks-list';
+    z.checks.forEach(c=>list.appendChild(buildCard(c)));
+    panel.appendChild(list);
+    const disc = document.createElement('div');
+    disc.className = 'zone-disclaimer';
+    disc.textContent = '⚕ ' + t('disclaimer');
+    panel.appendChild(disc);
+    bExpand.addEventListener('click', ()=>list.querySelectorAll('.check-card').forEach(c=>c.classList.add('open')));
+    bCollapse.addEventListener('click', ()=>list.querySelectorAll('.check-card').forEach(c=>c.classList.remove('open')));
+    bMark.addEventListener('click', ()=>{ z.checks.forEach(c=>completed.add(c.id)); refreshCards(list); });
+    bUnmark.addEventListener('click', ()=>{ z.checks.forEach(c=>completed.delete(c.id)); refreshCards(list); });
+    main.appendChild(panel);
+  });
+  applyFilters();
+  updateProgress();
+}
+function refreshCards(list){
+  list.querySelectorAll('.check-card').forEach(card=>{
+    const done = completed.has(card.dataset.id);
+    card.classList.toggle('completed', done);
+    card.querySelector('.check-checkbox').textContent = done ? '✓' : '';
+  });
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════
+// ZONES / SEARCH / FILTERS
+// ═══════════════════════════════════════════
+function switchZone(id){
+  activeZone = id;
+  document.querySelectorAll('.zone-tab').forEach(tab=>tab.classList.toggle('active', +tab.dataset.zone === id));
+  document.querySelectorAll('.zone-panel').forEach(p=>p.classList.toggle('active', p.id === 'zone-panel-' + id));
+}
+document.querySelectorAll('.zone-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{ document.getElementById('search-input').value=''; applyFilters(); switchZone(+tab.dataset.zone); });
+});
+document.querySelectorAll('.hero-badge[data-zone]').forEach(badge=>{
+  badge.addEventListener('click', ()=>{
+    switchZone(+badge.dataset.zone);
+    document.getElementById('zone-tabs').scrollIntoView({behavior:'smooth'});
+  });
+});
+document.querySelectorAll('.stat-pill[data-risk]').forEach(pill=>{
+  pill.addEventListener('click', ()=>{
+    riskFilter = (riskFilter === pill.dataset.risk) ? null : pill.dataset.risk;
+    document.querySelectorAll('.stat-pill[data-risk]').forEach(p=>p.classList.toggle('filter-on', p.dataset.risk === riskFilter));
+    applyFilters();
+  });
+});
+document.getElementById('search-input').addEventListener('input', applyFilters);
+
+function applyFilters(){
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const searching = q.length > 0;
+  let anyVisible = false;
+  ZONES.forEach(z=>{
+    const panel = document.getElementById('zone-panel-' + z.id);
+    if(!panel) return;
+    let zoneVisible = 0;
+    panel.querySelectorAll('.check-card').forEach(card=>{
+      const check = z.checks.find(c=>c.id === card.dataset.id);
+      const text = (check.title+' '+check.who+' '+check.what+' '+check.where+' '+check.why+' '+check.how+' '+check.measurement+' '+check.example+' '+check.tip).toLowerCase();
+      const matchQ = !searching || text.includes(q);
+      const matchR = !riskFilter || check.risk === riskFilter;
+      const show = matchQ && matchR;
+      card.style.display = show ? '' : 'none';
+      if(show) zoneVisible++;
+    });
+    if(searching || riskFilter){
+      panel.classList.toggle('active', zoneVisible > 0);
+      panel.querySelector('.zone-actions').style.display = 'none';
+    } else {
+      panel.classList.toggle('active', z.id === activeZone);
+      panel.querySelector('.zone-actions').style.display = '';
+    }
+    if(zoneVisible > 0) anyVisible = true;
+  });
+  document.getElementById('search-no-results').style.display = (searching || riskFilter) && !anyVisible ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════
+// THEMES / MODE / LANGUAGE
+// ═══════════════════════════════════════════
+const THEMES = [
+  {id:'mobility', name:'Steel Blue',    c:'#3E6B8A'},
+  {id:'teal',   name:'Teal Calm',     c:'#14B8A6'},
+  {id:'amber',  name:'Warm Amber',    c:'#F59E0B'},
+  {id:'rose',   name:'Rose Care',     c:'#E11D48'},
+  {id:'violet', name:'Gentle Violet', c:'#7C3AED'},
+  {id:'ocean',  name:'Ocean Blue',    c:'#2563EB'},
+  {id:'forest', name:'Forest Green',  c:'#16A34A'}
+];
+function buildThemeMenu(){
+  const dd = document.getElementById('dd-theme');
+  dd.innerHTML = '<div class="dropdown-title">' + t('theme') + '</div>';
+  THEMES.forEach(th=>{
+    const row = document.createElement('button');
+    row.className = 'theme-row' + (th.id === theme ? ' selected' : '');
+    row.innerHTML = '<span class="theme-swatch" style="background:' + th.c + '"></span>' + th.name + (th.id === theme ? '<span class="check-mark">✓</span>' : '');
+    row.addEventListener('click', e=>{
+      e.stopPropagation();
+      theme = th.id;
+      document.body.dataset.theme = theme;
+      buildThemeMenu(); persist();
+    });
+    dd.appendChild(row);
+  });
+}
+function buildLangMenu(){
+  const dd = document.getElementById('dd-lang');
+  dd.innerHTML = '<div class="dropdown-title">🌐 Language</div>';
+  Object.keys(I18N).forEach(code=>{
+    const row = document.createElement('button');
+    row.className = 'theme-row' + (code === lang ? ' selected' : '');
+    row.innerHTML = '<span style="font-weight:800;font-size:11px;color:var(--accent);min-width:22px;">' + code.toUpperCase() + '</span>' + I18N[code].name + (code === lang ? '<span class="check-mark">✓</span>' : '');
+    row.addEventListener('click', e=>{
+      e.stopPropagation();
+      lang = code;
+      applyLang(); renderAll(); buildLangMenu(); buildManual(); buildCheat(); buildCollection(); persist();
+    });
+    dd.appendChild(row);
+  });
+  const note = document.createElement('div');
+  note.style.cssText = 'font-size:10.5px;color:var(--ink-soft);padding:8px;max-width:230px;line-height:1.4;';
+  note.textContent = t('langNote');
+  dd.appendChild(note);
+}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.innerHTML = t(el.dataset.i18n); });
+  document.getElementById('search-input').placeholder = t('searchPh');
+  document.getElementById('lang-label').textContent = lang.toUpperCase();
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+}
+function toggleDropdown(id, e){
+  e.stopPropagation();
+  const dd = document.getElementById(id);
+  const wasOpen = dd.classList.contains('open');
+  document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
+  if(!wasOpen) dd.classList.add('open');
+}
+document.getElementById('btn-theme').addEventListener('click', e=>toggleDropdown('dd-theme', e));
+document.getElementById('btn-lang').addEventListener('click', e=>toggleDropdown('dd-lang', e));
+document.addEventListener('click', ()=>document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open')));
+document.getElementById('btn-mode').addEventListener('click', function(){
+  mode = mode === 'light' ? 'dark' : 'light';
+  document.body.dataset.mode = mode;
+  this.textContent = mode === 'light' ? '🌙' : '☀️';
+  persist();
+});
+
+// ═══════════════════════════════════════════
+// SAVE / LOAD PROGRESS
+// ═══════════════════════════════════════════
+document.getElementById('btn-save').addEventListener('click', ()=>{
+  const data = { product:'SafeLife', module:'limited-mobility', version:1, savedAt:new Date().toISOString(), completed:[...completed], lang, theme, mode };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'SafeLife_Mobility_Progress_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('btn-load').addEventListener('click', ()=>document.getElementById('load-file').click());
+document.getElementById('load-file').addEventListener('change', function(){
+  const file = this.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const d = JSON.parse(reader.result);
+      if(d.module !== 'limited-mobility' && !confirm('This file was saved from a different module. Load anyway?')) return;
+      completed.clear();
+      (d.completed||[]).forEach(id=>completed.add(id));
+      if(false && d.lang && I18N[d.lang]) lang = d.lang; /* language switching disabled for English-only release — remove "false &&" to re-enable */
+      if(d.theme) theme = d.theme;
+      if(d.mode) mode = d.mode;
+      document.body.dataset.theme = theme;
+      document.body.dataset.mode = mode;
+      document.getElementById('btn-mode').textContent = mode === 'light' ? '🌙' : '☀️';
+      applyLang(); renderAll(); buildThemeMenu(); buildLangMenu(); persist();
+    }catch(e){ alert('Could not read that file — is it a SafeLife progress file?'); }
+  };
+  reader.readAsText(file);
+  this.value = '';
+});
+
+// ═══════════════════════════════════════════
+// MODALS / PRINT / NAV
+// ═══════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click', ()=>closeModal(b.dataset.close)));
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click', e=>{ if(e.target === o) o.classList.remove('open'); }));
+document.getElementById('btn-manual').addEventListener('click', ()=>openModal('modal-manual'));
+document.getElementById('btn-cheat').addEventListener('click', ()=>openModal('modal-cheat'));
+document.getElementById('btn-print').addEventListener('click', ()=>openModal('modal-print'));
+document.getElementById('btn-search').addEventListener('click', ()=>{
+  const s = document.getElementById('search-input');
+  s.scrollIntoView({behavior:'smooth', block:'center'});
+  setTimeout(()=>s.focus(), 350);
+});
+
+function doPrint(cls){
+  document.querySelectorAll('.modal-overlay').forEach(o=>o.classList.remove('open'));
+  const wasOpen = new Set([...document.querySelectorAll('.check-card.open')]);
+  document.querySelectorAll('.check-card').forEach(c=>c.classList.add('open'));
+  if(cls) document.body.classList.add(cls);
+  const cleanup = ()=>{
+    document.body.classList.remove('print-zone','print-cheat');
+    document.querySelectorAll('.check-card').forEach(c=>{ if(!wasOpen.has(c)) c.classList.remove('open'); });
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  setTimeout(()=>window.print(), 60);
+}
+document.getElementById('print-all').addEventListener('click', ()=>doPrint(null));
+document.getElementById('print-zone').addEventListener('click', ()=>doPrint('print-zone'));
+document.getElementById('print-cheat2').addEventListener('click', ()=>doPrint('print-cheat'));
+document.getElementById('btn-print-cheat').addEventListener('click', ()=>doPrint('print-cheat'));
+
+function visibleCards(){
+  return [...document.querySelectorAll('.zone-panel.active .check-card')].filter(c=>c.style.display !== 'none');
+}
+function nearestCardIx(cards){
+  const mark = window.innerHeight * 0.35;
+  let best = 0, bestDist = Infinity;
+  cards.forEach((c, i)=>{
+    const d = Math.abs(c.getBoundingClientRect().top - mark);
+    if(d < bestDist){ bestDist = d; best = i; }
+  });
+  return best;
+}
+function goToCard(cards, ix){
+  if(ix < 0){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+  if(ix > cards.length - 1) ix = cards.length - 1;
+  const y = cards[ix].getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.35;
+  window.scrollTo({top: Math.max(0, y), behavior:'smooth'});
+}
+document.getElementById('fn-top').addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
+document.getElementById('fn-next').addEventListener('click', ()=>{
+  const cards = visibleCards(); if(!cards.length) return;
+  goToCard(cards, nearestCardIx(cards) + 1);
+});
+document.getElementById('fn-prev').addEventListener('click', ()=>{
+  const cards = visibleCards(); if(!cards.length) return;
+  goToCard(cards, nearestCardIx(cards) - 1);
+});
+
+// ═══════════════════════════════════════════
+// MANUAL / CHEAT SHEET / COLLECTION
+// ═══════════════════════════════════════════
+function buildManual(){
+  document.getElementById('manual-body').innerHTML =
+    t('manualBody') +
+    '<h4>⚕</h4><p>' + t('disclaimer') + ' ' + t('langNote') + '</p>';
+}
+
+const GOLDEN_RULES = [
+  'Check tyre pressure, brakes and wheel-lock function on a wheelchair before daily use — a poorly maintained chair is itself a fall and injury risk',
+  'Always lock both wheel brakes before any transfer to or from the wheelchair',
+  'Position the wheelchair at the correct angle and distance before a transfer, and remove or swing away footrests and armrests that are in the way',
+  'Keep ramps at a safe, manageable gradient and their surface slip-resistant in wet weather',
+  'Keep doorways, hallways and turning circles clear of clutter, cords and loose rugs at all times',
+  'Store frequently used items within a comfortable seated reach zone, and never on the floor or a high shelf as the only option',
+  'Have a written personal evacuation plan for every household member with limited mobility, reviewed and practised regularly',
+  'Keep mobility aids and any powered equipment charged, and keep a plan for essential equipment during a power outage',
+  'Caregivers should use safe lifting and handling technique for every transfer to protect their own back and joints, not just the person being assisted',
+  'Independence comes first — build the environment and routine around what the person can do, with support brought in only where it is genuinely needed'
+];
+const KEY_NUMBERS = [
+  ['Recommended maximum ramp gradient (general)','approximately 1:12 (about 4.8°) for rises with significant rise, gentler slopes of roughly 1:15–1:20 preferred — recognised accessible-design guidance'],
+  ['Minimum clear ramp width','approximately 900–1000mm (35–39in) — recognised accessible-design guidance'],
+  ['Minimum clear doorway width for wheelchair passage','approximately 800–850mm (32–33in) — recognised accessible-design guidance (general principles consistent with ISO 21542)'],
+  ['Recommended turning-circle diameter (manual wheelchair)','approximately 1500mm (59in) — recognised accessible-design guidance'],
+  ['Comfortable seated reach zone (forward, unobstructed)','approximately 400–1200mm (16–47in) from the floor — recognised accessible-design guidance'],
+  ['Comfortable seated reach zone (side, unobstructed)','approximately 230–1370mm (9–54in) from the floor — recognised accessible-design guidance'],
+  ['Recommended grab bar mounting height (general)','approximately 800–900mm (31–35in) from the floor — recognised accessible-design guidance'],
+  ['Recommended accessible light switch / control height','approximately 900–1100mm (35–43in) from the floor'],
+  ['Recommended accessible power outlet height (lower limit)','approximately 400–450mm (16–18in) from the floor'],
+  ['Wheelchair tyre pressure check frequency','at least weekly for pneumatic tyres — general mobility-equipment maintenance guidance'],
+  ['Pressure-relief repositioning interval (higher risk)','approximately every 15–30 minutes while seated — recognised pressure-injury-prevention guidance, confirm with the individual\'s clinician'],
+  ['Evacuation chair / buddy-system plan review frequency','at least every few months, and after any change in mobility needs'],
+  ['Smoke alarm test frequency','at least monthly, with visual/vibrating alert devices tested on the same schedule — recognised fire-safety guidance'],
+  ['Backup power / charging check for essential mobility equipment','verify charge and backup plan at least weekly']
+];
+
+const CONTACTS_KEY = 'safelife-mobility-contacts';
+const DEFAULT_CONTACTS = [
+  ['Emergency services',''],
+  ['GP / family doctor',''],
+  ['Occupational therapist',''],
+  ['Physiotherapist',''],
+  ['Wheelchair / equipment supplier',''],
+  ['Accessible transport provider',''],
+  ['Backup caregiver','']
+];
+let contacts;
+try{
+  const raw = localStorage.getItem(CONTACTS_KEY);
+  contacts = raw ? JSON.parse(raw) : null;
+}catch(e){ contacts = null; }
+if(!contacts || !Array.isArray(contacts.list)) contacts = { list: DEFAULT_CONTACTS.map(c=>c.slice()), notes:'' };
+function saveContacts(){
+  try{ localStorage.setItem(CONTACTS_KEY, JSON.stringify(contacts)); }catch(e){}
+  buildCheatPrint();
+}
+function buildCheat(){
+  const body = document.getElementById('cheat-body');
+  const rules = GOLDEN_RULES.map(r=>'<li>' + r + '</li>').join('');
+  const nums = KEY_NUMBERS.map(n=>'<tr><td><strong>' + n[0] + '</strong></td><td>' + n[1] + '</td></tr>').join('');
+  body.innerHTML =
+    '<h4>📞 ' + t('cheatContacts') + '</h4>' +
+    '<p style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">' + t('cheatHint') + '</p>' +
+    '<div id="contact-rows"></div>' +
+    '<button class="btn btn-outline" id="add-contact" style="margin:8px 0 4px;">' + t('addContact') + '</button>' +
+    '<h4>⭐ ' + t('rules') + '</h4><ul class="rule-list">' + rules + '</ul>' +
+    '<h4>📏 ' + t('keyNums') + '</h4><table><tr><th>Check</th><th>Safe value / standard</th></tr>' + nums + '</table>' +
+    '<h4>📝 ' + t('myNotes') + '</h4>' +
+    '<textarea id="cheat-notes" placeholder="' + t('notesPh') + '" style="width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;background:var(--tile);color:var(--ink);padding:10px 12px;font-family:\'Inter\',sans-serif;font-size:13px;resize:vertical;"></textarea>';
+  renderContactRows();
+  const notesEl = document.getElementById('cheat-notes');
+  notesEl.value = contacts.notes || '';
+  notesEl.addEventListener('input', function(){ contacts.notes = this.value; saveContacts(); });
+  document.getElementById('add-contact').addEventListener('click', function(){
+    contacts.list.push(['','']);
+    renderContactRows(); saveContacts();
+    const rows = document.querySelectorAll('#contact-rows .c-name');
+    rows[rows.length-1].focus();
+  });
+  buildCheatPrint();
+}
+function renderContactRows(){
+  const wrap = document.getElementById('contact-rows');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  const inputCss = 'border:1px solid var(--line);border-radius:8px;background:var(--tile);color:var(--ink);padding:8px 10px;font-family:\'Inter\',sans-serif;font-size:13px;';
+  contacts.list.forEach((c, ix)=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;align-items:center;';
+    const name = document.createElement('input');
+    name.className = 'c-name'; name.type = 'text'; name.value = c[0];
+    name.placeholder = 'Name / service'; name.style.cssText = inputCss + 'flex:1.4;min-width:0;';
+    const num = document.createElement('input');
+    num.type = 'text'; num.value = c[1];
+    num.placeholder = '+ number'; num.style.cssText = inputCss + 'flex:1;min-width:0;font-weight:700;';
+    const del = document.createElement('button');
+    del.textContent = '✕'; del.title = t('delRow');
+    del.style.cssText = 'border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);border-radius:8px;width:30px;height:34px;cursor:pointer;flex-shrink:0;';
+    name.addEventListener('input', function(){ contacts.list[ix][0] = this.value; saveContacts(); });
+    num.addEventListener('input', function(){ contacts.list[ix][1] = this.value; saveContacts(); });
+    del.addEventListener('click', function(){ contacts.list.splice(ix,1); renderContactRows(); saveContacts(); });
+    row.append(name, num, del);
+    wrap.appendChild(row);
+  });
+}
+function buildCheatPrint(){
+  const esc = s => String(s).replace(/</g,'&lt;');
+  const filled = contacts.list.filter(c=>c[0] || c[1]);
+  const chips = filled.map(h=>'<div class="cp-chip"><b>' + esc(h[0]||'—') + '</b><span>' + (esc(h[1]) || '____________') + '</span></div>').join('');
+  const rules = GOLDEN_RULES.map(r=>'<li>' + r + '</li>').join('');
+  const nums = KEY_NUMBERS.map(n=>'<tr><td><strong>' + n[0] + '</strong></td><td>' + n[1] + '</td></tr>').join('');
+  const activeQR = getSavedQR() || QR_IMAGE;
+  const qr = activeQR
+    ? '<img src="' + activeQR + '" alt="QR">'
+    : '<div class="qr-ph">' + (STORE_URL ? esc(STORE_URL) : 'Your QR<br>code here') + '</div>';
+  document.getElementById('cheat-print').innerHTML =
+    '<div class="cp-card">' +
+      '<div class="cp-head">' + ICONS.stage +
+        '<div><div class="cp-title">Safe<em>Life</em></div>' +
+        '<div class="cp-sub">' + t('cheatTitle') + ' · ' + t('heroTitle') + '</div></div>' +
+        '<div class="cp-tag">"To all moms by a mom"<br>NEBOSH &amp; OSHA trained HSE professional</div>' +
+      '</div>' +
+      '<div class="cp-contacts">' + chips + '</div>' +
+      '<div class="cp-cols">' +
+        '<div class="cp-rules"><h3>⭐ ' + t('rules') + '</h3><ul>' + rules + '</ul></div>' +
+        '<div class="cp-numsec"><h3>📏 ' + t('keyNums') + '</h3><table>' + nums + '</table></div>' +
+      '</div>' +
+      (contacts.notes ? '<div class="cp-notes"><b>' + t('myNotes') + '</b>' + esc(contacts.notes) + '</div>' : '') +
+      '<div class="cp-foot">' +
+        '<div>Made with care by <b>' + BRAND_NAME + '</b> · SafeLife Collection<br>' + t('disclaimer') + '</div>' +
+        '<div class="cp-qr">' + (STORE_URL ? '<div style="font-size:8px;">' + esc(STORE_URL) + '<br>Scan for the full collection</div>' : '') + qr + '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════
+// SELLER: per-product QR code, PIN-protected (each file's own STORE_KEY keeps these separate)
+// ═══════════════════════════════════════════
+const QR_KEY = STORE_KEY + '-qr';
+const QR_PIN_KEY = STORE_KEY + '-qrpin';
+function getSavedQR(){ try{ return localStorage.getItem(QR_KEY) || ''; }catch(e){ return ''; } }
+function sellerRenderLocked(){
+  const hasPin = !!localStorage.getItem(QR_PIN_KEY);
+  document.getElementById('seller-body').innerHTML = hasPin
+    ? '<p>Enter your PIN to manage this file\'s QR code.</p><input type="password" inputmode="numeric" maxlength="12" id="seller-pin-input" placeholder="PIN" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--tile);color:var(--ink);font-size:15px;letter-spacing:2px;margin-bottom:10px;">'
+      + '<div class="modal-actions"><button class="btn btn-primary" id="seller-unlock">Unlock</button></div>'
+    : '<p>No PIN set yet for this file. Create one now — you\'ll need it to change the QR code later. Every product file keeps its own separate PIN and QR code.</p>'
+      + '<input type="password" inputmode="numeric" maxlength="12" id="seller-pin-new" placeholder="Create a PIN" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--tile);color:var(--ink);font-size:15px;letter-spacing:2px;margin-bottom:8px;">'
+      + '<input type="password" inputmode="numeric" maxlength="12" id="seller-pin-confirm" placeholder="Confirm PIN" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--tile);color:var(--ink);font-size:15px;letter-spacing:2px;margin-bottom:10px;">'
+      + '<div class="modal-actions"><button class="btn btn-primary" id="seller-setpin">Set PIN</button></div>';
+  if(hasPin){
+    document.getElementById('seller-unlock').addEventListener('click', function(){
+      const val = document.getElementById('seller-pin-input').value;
+      if(val && val === localStorage.getItem(QR_PIN_KEY)) sellerRenderUnlocked();
+      else alert('Incorrect PIN.');
+    });
+  } else {
+    document.getElementById('seller-setpin').addEventListener('click', function(){
+      const a = document.getElementById('seller-pin-new').value, b = document.getElementById('seller-pin-confirm').value;
+      if(!a || a.length < 4){ alert('Use at least 4 digits.'); return; }
+      if(a !== b){ alert('PINs do not match.'); return; }
+      try{ localStorage.setItem(QR_PIN_KEY, a); }catch(e){}
+      sellerRenderUnlocked();
+    });
+  }
+}
+function sellerRenderUnlocked(){
+  const current = getSavedQR();
+  document.getElementById('seller-body').innerHTML =
+    '<p>Upload this product\'s QR code image. It replaces the placeholder on the printed cheat sheet — saved on this device only, separately for every product file.</p>' +
+    (current ? '<img src="' + current + '" style="width:110px;height:110px;border:1px solid var(--line);border-radius:9px;margin-bottom:10px;object-fit:contain;background:#fff;">' : '') +
+    '<input type="file" accept="image/*" id="seller-qr-file" style="margin-bottom:10px;">' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" id="seller-remove-qr">Remove QR</button>' +
+      '<button class="btn btn-outline" id="seller-change-pin">Change PIN</button>' +
+      '<button class="btn btn-primary" id="seller-done">Done</button>' +
+    '</div>';
+  document.getElementById('seller-qr-file').addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      try{ localStorage.setItem(QR_KEY, ev.target.result); }catch(e){}
+      buildCheatPrint();
+      sellerRenderUnlocked();
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('seller-remove-qr').addEventListener('click', function(){
+    try{ localStorage.removeItem(QR_KEY); }catch(e){}
+    buildCheatPrint();
+    sellerRenderUnlocked();
+  });
+  document.getElementById('seller-change-pin').addEventListener('click', function(){
+    try{ localStorage.removeItem(QR_PIN_KEY); }catch(e){}
+    sellerRenderLocked();
+  });
+  document.getElementById('seller-done').addEventListener('click', ()=>closeModal('modal-seller'));
+}
+document.getElementById('btn-seller').addEventListener('click', function(){ sellerRenderLocked(); openModal('modal-seller'); });
+
+const MODULES = [
+  {a:'0–28 Days'},
+  {a:'1–12 Months'},
+  {a:'1–3 Years'},
+  {a:'3–6 Years'},
+  {a:'6–12 Years'},
+  {a:'13–18 Years'},
+  {a:'19–29 Years'},
+  {a:'30–44 Years'},
+  {a:'45–64 Years'},
+  {a:'65–79 Years'},
+  {a:'80–89 Years'},
+  {a:'90+ Years'}
+];
+const MODULE_ICON_IX = [0,0,1,2,3,4,5,6,6,7,7,7];
+const SITUATION_MODULES = [
+  {name:'Pregnancy', sub:'Stage 0', status:'available', emoji:'🤰'},
+  {name:'Postpartum Recovery', sub:'Situation Module', status:'available', emoji:'🌷'},
+  {name:'Grandparent-Proofing', sub:'Situation Module', status:'available', emoji:'👵'},
+  {name:'Autism & Neurodivergent Children', sub:'Situation Module', status:'available', emoji:'♾️'},
+  {name:'Emergency Preparedness', sub:'Situation Module', status:'available', emoji:'🧳'},
+  {name:'Twins & Multiples', sub:'Situation Module', status:'available', emoji:'👯'},
+  {name:'Babysitter/Nanny Handover', sub:'Situation Module', status:'available', emoji:'🗒️'},
+  {name:'Dementia & Alzheimer\'s Care', sub:'Situation Module', status:'available', emoji:'🏠'},
+  {name:'Injury & Post-Surgery Recovery', sub:'Situation Module', status:'available', emoji:'🩹'},
+  {name:'Chronic Conditions Household', sub:'Situation Module', status:'available', emoji:'💊'},
+  {name:'Limited Mobility / Wheelchair', sub:'Situation Module', status:'current', emoji:'♿'},
+  {name:'Visually / Hearing Impaired', sub:'Situation Module', status:'available', emoji:'🔔'},
+  {name:'New Pet + Baby Household', sub:'Coming Soon', status:'coming', emoji:'🐾'},
+  {name:'The Caregiver\'s Own Safety', sub:'Coming Soon', status:'coming', emoji:'🤲'},
+  {name:'New Home Move-In Audit', sub:'Coming Soon', status:'coming', emoji:'🏡'},
+  {name:'Farm & Rural Household', sub:'Coming Soon', status:'coming', emoji:'🚜'},
+  {name:'Home Office / WFH', sub:'Coming Soon', status:'coming', emoji:'💻'}
+];
+function buildSituationGrid(){
+  const grid = document.getElementById('situation-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  SITUATION_MODULES.forEach(m=>{
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    const tagClass = m.status === 'coming' ? 'coming' : (m.status === 'current' ? 'owned' : 'addon');
+    const tagLabel = m.status === 'coming' ? 'Coming Soon' : (m.status === 'current' ? '✓ Current Module' : 'Available Separately');
+    card.innerHTML = '<span class="m-emoji">' + m.emoji + '</span><span class="m-name">' + m.name + '</span><span class="m-age">' + m.sub + '</span>' +
+      '<span class="module-tag ' + tagClass + '">' + tagLabel + '</span>';
+    grid.appendChild(card);
+  });
+}
+
+function buildCollection(){
+  const grid = document.getElementById('collection-grid');
+  grid.innerHTML = '';
+  MODULES.forEach((m, mi)=>{
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    const iconIx = MODULE_ICON_IX[mi] != null ? MODULE_ICON_IX[mi] : mi;
+    card.innerHTML = '<span class="m-emoji">' + ICONS.stages[iconIx] + '</span><span class="m-name">' + t('mn'+(mi+1)) + '</span><span class="m-age">' + m.a + '</span>' +
+      '<span class="module-tag ' + (m.owned ? 'owned' : 'addon') + '">' + (m.owned ? t('owned') : t('addon')) + '</span>';
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+restore();
+injectIcons();
+document.body.dataset.theme = theme;
+document.body.dataset.mode = mode;
+document.getElementById('btn-mode').textContent = mode === 'light' ? '🌙' : '☀️';
+applyLang();
+fillStats();
+renderAll();
+buildThemeMenu();
+buildLangMenu();
+buildManual();
+buildCheat();
+buildCollection();
+buildSituationGrid();
+</script>
+</body>
+</html>
